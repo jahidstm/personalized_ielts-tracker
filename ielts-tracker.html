@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Tracker &#x2014; Band 7.0</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+:root{--bg:#0d1117;--bg2:#161b22;--card:#1c2333;--card2:#21293d;--inp:#0d1117;--bdr:#30363d;--bdr2:#21293d;--t1:#e6edf3;--t2:#8b949e;--tm:#656d76;--blue:#58a6ff;--green:#3fb950;--orange:#d29922;--red:#f85149;--purple:#bc8cff;--cyan:#39d353;--p1c:#1a7f37;--p1b:rgba(26,127,55,0.12);--p2c:#1f6feb;--p2b:rgba(31,111,235,0.12);--p3c:#d29922;--p3b:rgba(210,153,34,0.12);--p4c:#bc8cff;--p4b:rgba(188,140,255,0.12);--mr:rgba(248,81,73,0.15);--r:12px;--rs:8px;--sh:0 4px 24px rgba(0,0,0,.4);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hind Siliguri','Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;line-height:1.6;font-size:15px;}
+::-webkit-scrollbar{width:6px;height:6px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px;}
+.hdr{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:0 20px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;}
+.logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--t1);white-space:nowrap;}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#58a6ff,#bc8cff);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.hnav{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.nbtn{padding:6px 14px;border-radius:20px;border:1px solid transparent;background:transparent;color:var(--t2);font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.nbtn:hover{color:var(--t1);background:var(--card);}
+.nbtn.active{color:var(--blue);background:rgba(88,166,255,.1);border-color:rgba(88,166,255,.3);}
+.strk{display:flex;align-items:center;gap:6px;background:rgba(57,211,83,.1);border:1px solid rgba(57,211,83,.25);border-radius:20px;padding:4px 12px;font-size:13px;font-weight:600;color:var(--cyan);white-space:nowrap;}
+.wrap{display:flex;max-width:1400px;margin:0 auto;min-height:calc(100vh - 60px);}
+.side{width:280px;min-width:280px;background:var(--bg2);border-right:1px solid var(--bdr);padding:20px 16px;overflow-y:auto;position:sticky;top:60px;height:calc(100vh - 60px);}
+.main{flex:1;padding:20px;overflow-x:hidden;}
+.page{display:none;}.page.active{display:block;}
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:20px;margin-bottom:16px;}
+.ctit{font-size:16px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.tbanner{background:linear-gradient(135deg,rgba(31,111,235,.2),rgba(188,140,255,.1));border:1px solid rgba(88,166,255,.3);border-radius:var(--r);padding:20px;margin-bottom:20px;}
+.tbanner h2{font-size:20px;margin-bottom:4px;}
+.tdt{color:var(--t2);font-size:13px;margin-bottom:16px;}
+.pbdg{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:16px;}
+.pbdg.p1{background:var(--p1b);color:#3fb950;border:1px solid rgba(63,185,80,.3);}
+.pbdg.p2{background:var(--p2b);color:var(--blue);border:1px solid rgba(88,166,255,.3);}
+.pbdg.p3{background:var(--p3b);color:var(--orange);border:1px solid rgba(210,153,34,.3);}
+.pbdg.p4{background:var(--p4b);color:var(--purple);border:1px solid rgba(188,140,255,.3);}
+.tlist{display:flex;flex-direction:column;gap:8px;}
+.titem{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--bg2);border:1px solid var(--bdr2);border-radius:var(--rs);cursor:pointer;transition:all .2s;user-select:none;}
+.titem:hover{border-color:var(--bdr);background:var(--card2);}
+.titem.done{opacity:.55;}
+.titem.done .ttx{text-decoration:line-through;color:var(--tm);}
+.tchk{width:20px;height:20px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s;background:transparent;}
+.titem.done .tchk{background:var(--green);border-color:var(--green);}
+.titem.done .tchk::after{content:'\2713';font-size:11px;color:#fff;font-weight:700;}
+.tbdy{flex:1;}.ttx{font-size:14px;line-height:1.5;}
+.tmta{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap;}
+.ttm{font-size:11px;color:var(--blue);background:rgba(88,166,255,.1);padding:2px 8px;border-radius:10px;font-weight:500;}
+.tres{font-size:11px;color:var(--tm);}
+.ttag{font-size:10px;padding:1px 7px;border-radius:8px;font-weight:600;}
+.tag-listening{background:rgba(248,81,73,.15);color:#ff7b72;}.tag-speaking{background:rgba(188,140,255,.15);color:var(--purple);}
+.tag-reading{background:rgba(88,166,255,.15);color:var(--blue);}.tag-writing{background:rgba(210,153,34,.15);color:var(--orange);}
+.tag-grammar{background:rgba(63,185,80,.15);color:var(--green);}.tag-vocab{background:rgba(57,211,83,.15);color:#7ee787;}
+.tag-typing{background:rgba(139,148,158,.15);color:var(--t2);}.tag-mock{background:rgba(248,81,73,.2);color:var(--red);}
+.tag-revision{background:rgba(188,140,255,.15);color:var(--purple);}.tag-extra{background:rgba(255,166,0,.15);color:#ffa657;}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px;}
+.scard{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:16px;text-align:center;}
+.sval{font-size:32px;font-weight:700;line-height:1.1;margin-bottom:4px;}.slbl{font-size:12px;color:var(--t2);}
+.pbwrp{margin-bottom:14px;}
+.pbhdr{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;color:var(--t2);}
+.pbhdr span:first-child{color:var(--t1);font-weight:500;}
+.pbtrk{height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;border:1px solid var(--bdr);}
+.pbfil{height:100%;border-radius:4px;transition:width .6s ease;}
+.fp1{background:linear-gradient(90deg,#1a7f37,#3fb950);}.fp2{background:linear-gradient(90deg,#1f6feb,#58a6ff);}
+.fp3{background:linear-gradient(90deg,#b08800,#d29922);}.fp4{background:linear-gradient(90deg,#6e40c9,#bc8cff);}
+.chdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;}
+.cnb{background:var(--card);border:1px solid var(--bdr);color:var(--t1);padding:6px 14px;border-radius:var(--rs);cursor:pointer;font-size:14px;transition:all .2s;}
+.cnb:hover{background:var(--card2);border-color:var(--blue);}.cmtit{font-size:16px;font-weight:600;flex:1;text-align:center;}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cdhdr{text-align:center;font-size:11px;font-weight:600;color:var(--tm);padding:6px 0;text-transform:uppercase;letter-spacing:.5px;}
+.cday{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--rs);cursor:pointer;transition:all .15s;position:relative;padding:2px;min-height:42px;border:1px solid transparent;background:transparent;font-size:13px;}
+.cday:hover{background:var(--card2);border-color:var(--bdr);}
+.cday.empty{cursor:default;opacity:0;pointer-events:none;}
+.cday.out{opacity:.2;cursor:default;pointer-events:none;}
+.cday.today{border-color:var(--blue);background:rgba(88,166,255,.1);font-weight:700;color:var(--blue);}
+.cday.mockd{background:var(--mr);border-color:rgba(248,81,73,.4);color:var(--red);font-weight:600;}
+.cday.examd{background:rgba(248,81,73,.3);border-color:var(--red);color:#fff;font-weight:700;}
+.cdot{width:4px;height:4px;border-radius:50%;margin-top:2px;}
+.cday.hasd .cdot{background:var(--green);}.cday.mockd .cdot{background:var(--red);}
+.clgnd{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;font-size:12px;color:var(--t2);}
+.clit{display:flex;align-items:center;gap:5px;}.ldot{width:12px;height:12px;border-radius:3px;border:1px solid;}
+.sfrm{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px;}
+.fgrp{display:flex;flex-direction:column;gap:6px;}.fgrp label{font-size:12px;color:var(--t2);font-weight:500;}
+.finp,.fsel,.ftxt{background:var(--inp);border:1px solid var(--bdr);color:var(--t1);border-radius:var(--rs);padding:8px 12px;font-family:inherit;font-size:14px;outline:none;transition:border-color .2s;width:100%;}
+.finp:focus,.fsel:focus,.ftxt:focus{border-color:var(--blue);}.fsel option{background:var(--bg2);}.ftxt{resize:vertical;min-height:80px;}
+.btn{padding:10px 20px;border-radius:var(--rs);border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btnp{background:var(--blue);color:#fff;}.btnp:hover{background:#79b8ff;transform:translateY(-1px);}
+.btnd{background:rgba(248,81,73,.2);color:var(--red);border:1px solid rgba(248,81,73,.3);}.btnd:hover{background:rgba(248,81,73,.3);}
+.bsm{padding:5px 10px;font-size:12px;}
+.dtbl{width:100%;border-collapse:collapse;font-size:13px;}
+.dtbl th{background:var(--bg2);color:var(--t2);font-weight:600;padding:10px 12px;text-align:left;border-bottom:1px solid var(--bdr);white-space:nowrap;}
+.dtbl td{padding:10px 12px;border-bottom:1px solid var(--bdr2);vertical-align:top;}
+.dtbl tr:last-child td{border-bottom:none;}.dtbl tr:hover td{background:var(--card2);}
+.bchip{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:22px;border-radius:4px;font-size:11px;font-weight:700;padding:0 4px;}
+.bg7{background:rgba(63,185,80,.2);color:var(--green);}.bg6{background:rgba(210,153,34,.2);color:var(--orange);}.bgl{background:rgba(248,81,73,.2);color:var(--red);}
+.eitm{background:var(--bg2);border:1px solid var(--bdr2);border-radius:var(--rs);padding:14px;margin-bottom:10px;position:relative;}
+.eihdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.edt{font-size:11px;color:var(--tm);}.etg{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;}
+.etxt{font-size:13px;color:var(--t2);line-height:1.6;}
+.edel{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--tm);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px;transition:all .2s;}
+.edel:hover{color:var(--red);background:rgba(248,81,73,.1);}
+.stit{font-size:13px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.ritm{padding:10px 12px;background:var(--card);border:1px solid var(--bdr2);border-radius:var(--rs);margin-bottom:8px;transition:all .2s;}
+.ritm:hover{border-color:var(--bdr);}.rnm{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:3px;}
+.rph{font-size:11px;color:var(--tm);margin-bottom:3px;}.rhw{font-size:11px;color:var(--t2);line-height:1.4;}
+.ptabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.ptab{padding:8px 18px;border-radius:20px;border:1px solid var(--bdr);background:transparent;color:var(--t2);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.ptab:hover{color:var(--t1);}
+.ptab.p1.active{background:var(--p1b);border-color:rgba(63,185,80,.4);color:#3fb950;}
+.ptab.p2.active{background:var(--p2b);border-color:rgba(88,166,255,.4);color:var(--blue);}
+.ptab.p3.active{background:var(--p3b);border-color:rgba(210,153,34,.4);color:var(--orange);}
+.ptab.p4.active{background:var(--p4b);border-color:rgba(188,140,255,.4);color:var(--purple);}
+.wsec{margin-bottom:16px;}
+.whdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--card);border:1px solid var(--bdr);border-radius:var(--rs);cursor:pointer;transition:all .2s;margin-bottom:4px;}
+.whdr:hover{border-color:var(--blue);}
+.wtit{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.wdt{font-size:12px;color:var(--tm);font-weight:400;}
+.wpi{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);}
+.wbdy{display:none;padding-top:4px;}.wbdy.open{display:block;}
+.wgl{font-size:12px;color:var(--blue);padding:10px 14px;background:rgba(88,166,255,.05);border-left:3px solid var(--blue);border-radius:0 var(--rs) var(--rs) 0;margin-bottom:10px;line-height:1.5;}
+.chwrp{position:relative;height:240px;}
+.mnot{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--mr);border:1px solid rgba(248,81,73,.3);border-radius:var(--rs);font-size:12px;color:var(--red);margin-bottom:10px;}
+.shdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.stitle{font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.tip{background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);border-radius:var(--rs);padding:12px 14px;font-size:13px;color:#7ee787;line-height:1.6;margin-bottom:10px;}
+.empty{text-align:center;padding:40px 20px;color:var(--tm);font-size:14px;}
+.ei{font-size:36px;margin-bottom:10px;}
+#toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--bdr);border-radius:var(--rs);padding:12px 18px;font-size:13px;z-index:999;box-shadow:var(--sh);opacity:0;transform:translateY(12px);transition:all .3s;pointer-events:none;}
+#toast.show{opacity:1;transform:translateY(0);}
+@media(max-width:900px){.side{display:none;}.wrap{flex-direction:column;}}
+@media(max-width:640px){.hdr{padding:10px 12px;height:auto;flex-wrap:wrap;gap:10px;}.logo{flex:1;}.hnav{width:100%;order:3;padding-bottom:4px;}.main{padding:12px;}.sgrid{grid-template-columns:repeat(2,1fr);}.nbtn{padding:5px 8px;font-size:12px;}.cday{font-size:11px;min-height:36px;}.sfrm{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="logo"><div class="logo-icon">&#x1F4DA;</div><span>IELTS Tracker</span></div>
+  <nav class="hnav">
+    <button class="nbtn active" onclick="showPage('home')" id="nav-home">&#x1F3E0; আজকের কাজ</button>
+    <button class="nbtn" onclick="showPage('plan')" id="nav-plan">&#x1F4C5; পরিকল্পনা</button>
+    <button class="nbtn" onclick="showPage('calendar')" id="nav-calendar">&#x1F5D3; ক্যালেন্ডার</button>
+    <button class="nbtn" onclick="showPage('progress')" id="nav-progress">&#x1F4CA; অগ্রগতি</button>
+    <button class="nbtn" onclick="showPage('scores')" id="nav-scores">&#x1F3AF; স্কোর</button>
+    <button class="nbtn" onclick="showPage('errors')" id="nav-errors">&#x1F4DD; ভুলের লগ</button>
+  </nav>
+  <div class="strk" id="streak-display">&#x1F525; 0 দিন</div>
+  <div id="sync-status" style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;border:1px solid var(--bdr);color:var(--tm);white-space:nowrap;">&#x23F3; ...</div>
+</header>
+<div class="wrap">
+  <aside class="side"><div class="stit">&#x1F4DA; বই ও রিসোর্স</div><div id="res-panel"></div></aside>
+  <main class="main">
+    <div class="page active" id="page-home">
+      <div class="tbanner">
+        <h2 id="t-head">&#x23F3; ...</h2>
+        <div class="tdt" id="t-date"></div>
+        <div id="t-phase"></div>
+        <div id="t-week" style="font-size:13px;color:var(--t2);margin-bottom:12px;"></div>
+      </div>
+      <div class="card"><div class="ctit">&#x2705; আজকের Task-সমূহ</div><div class="tlist" id="today-tasks"></div></div>
+      <div class="sgrid">
+        <div class="scard"><div class="sval" id="s-pct" style="color:var(--blue)">0%</div><div class="slbl">সামগ্রিক সম্পন্ন</div></div>
+        <div class="scard"><div class="sval" id="s-today" style="color:var(--green)">0/0</div><div class="slbl">আজকের কাজ</div></div>
+        <div class="scard"><div class="sval" id="s-str" style="color:#ffa657">0</div><div class="slbl">&#x1F525; Streak (দিন)</div></div>
+        <div class="scard"><div class="sval" id="s-days" style="color:var(--red)">&#x2014;</div><div class="slbl">পরীক্ষার দিন বাকি</div></div>
+      </div>
+    </div>
+    <div class="page" id="page-plan">
+      <div class="shdr"><div class="stitle">&#x1F4C5; সম্পূর্ণ প্রস্তুতি পরিকল্পনা</div></div>
+      <div class="ptabs">
+        <button class="ptab p1 active" onclick="showPhase(1)" id="ptab-1">&#x1F331; Phase 1 — Foundation</button>
+        <button class="ptab p2" onclick="showPhase(2)" id="ptab-2">&#x26A1; Phase 2 — Skill Building</button>
+        <button class="ptab p3" onclick="showPhase(3)" id="ptab-3">&#x1F9EA; Phase 3 — Mock Tests</button>
+        <button class="ptab p4" onclick="showPhase(4)" id="ptab-4">&#x2728; Phase 4 — Final Polish</button>
+      </div>
+      <div id="plan-cont"></div>
+    </div>
+    <div class="page" id="page-calendar">
+      <div class="shdr"><div class="stitle">&#x1F5D3; ক্যালেন্ডার</div></div>
+      <div class="card">
+        <div class="chdr">
+          <button class="cnb" onclick="calNav(-1)">&#x25C4;</button>
+          <div class="cmtit" id="cal-tit"></div>
+          <button class="cnb" onclick="calNav(1)">&#x25BA;</button>
+        </div>
+        <div class="cgrid" id="cal-hdrs"></div>
+        <div class="cgrid" id="cal-grid" style="margin-top:4px;"></div>
+        <div class="clgnd">
+          <div class="clit"><div class="ldot" style="background:rgba(88,166,255,.2);border-color:var(--blue);"></div>আজ</div>
+          <div class="clit"><div class="ldot" style="background:var(--mr);border-color:rgba(248,81,73,.4);"></div>Mock Test</div>
+          <div class="clit"><div class="ldot" style="background:rgba(248,81,73,.3);border-color:var(--red);"></div>পরীক্ষা</div>
+          <div class="clit"><div class="ldot" style="background:var(--p1b);border-color:rgba(63,185,80,.3);"></div>Phase 1</div>
+          <div class="clit"><div class="ldot" style="background:var(--p2b);border-color:rgba(88,166,255,.3);"></div>Phase 2</div>
+          <div class="clit"><div class="ldot" style="background:var(--p3b);border-color:rgba(210,153,34,.3);"></div>Phase 3</div>
+          <div class="clit"><div class="ldot" style="background:var(--p4b);border-color:rgba(188,140,255,.3);"></div>Phase 4</div>
+          <div class="clit"><div class="ldot" style="background:rgba(63,185,80,.2);border-color:var(--green);"></div>কাজ সম্পন্ন</div>
+        </div>
+      </div>
+      <div class="card" id="cal-det" style="display:none;">
+        <div class="ctit" id="cal-det-tit"></div>
+        <div id="cal-det-tasks"></div>
+      </div>
+    </div>
+    <div class="page" id="page-progress">
+      <div class="stitle" style="margin-bottom:16px;">&#x1F4CA; অগ্রগতি ড্যাশবোর্ড</div>
+      <div class="sgrid">
+        <div class="scard"><div class="sval" id="p-tot" style="color:var(--blue)">0%</div><div class="slbl">সামগ্রিক সম্পন্ন</div></div>
+        <div class="scard"><div class="sval" id="p-str" style="color:#ffa657">0</div><div class="slbl">&#x1F525; Streak (দিন)</div></div>
+        <div class="scard"><div class="sval" id="p-done" style="color:var(--green)">0</div><div class="slbl">মোট Task সম্পন্ন</div></div>
+        <div class="scard"><div class="sval" id="p-all" style="color:var(--t2)">0</div><div class="slbl">মোট Task</div></div>
+      </div>
+      <div class="card"><div class="ctit">Phase-ভিত্তিক অগ্রগতি</div><div id="phase-bars"></div></div>
+      <div class="card"><div class="ctit">Listening ও Reading স্কোর ট্রেন্ড</div><div class="chwrp"><canvas id="scoreChart"></canvas></div></div>
+    </div>
+    <div class="page" id="page-scores">
+      <div class="stitle" style="margin-bottom:16px;">&#x1F3AF; সাপ্তাহিক স্কোর ট্র্যাকার</div>
+      <div class="card">
+        <div class="ctit">নতুন স্কোর যোগ করুন</div>
+        <div class="sfrm">
+          <div class="fgrp"><label>সপ্তাহ নম্বর <span style="color:var(--red);font-weight:700;">*</span></label><select class="fsel" id="sw-wk"><option value="">বেছে নিন</option></select></div>
+          <div class="fgrp"><label>তারিখ <span style="color:var(--red);font-weight:700;">*</span></label><input type="date" class="finp" id="sw-dt"></div>
+          <div class="fgrp"><label>Test Source</label>
+            <select class="fsel" id="sw-src">
+              <option value="">বেছে নিন</option>
+              <option>Cambridge 18 &#x2014; Test 1</option><option>Cambridge 18 &#x2014; Test 2</option>
+              <option>Cambridge 18 &#x2014; Test 3</option><option>Cambridge 18 &#x2014; Test 4</option>
+              <option>Cambridge 19 &#x2014; Test 1</option><option>Cambridge 19 &#x2014; Test 2</option>
+              <option>Cambridge 19 &#x2014; Test 3</option><option>Cambridge 19 &#x2014; Test 4</option>
+              <option>Cambridge 20 &#x2014; Test 1</option><option>Cambridge 20 &#x2014; Test 2</option>
+              <option>Cambridge 20 &#x2014; Test 3</option><option>Cambridge 20 &#x2014; Test 4</option>
+              <option>Cambridge 21 &#x2014; Test 1</option><option>Cambridge 21 &#x2014; Test 2</option>
+              <option>Cambridge 21 &#x2014; Test 3</option><option>Cambridge 21 &#x2014; Test 4</option>
+              <option>Jumpinto.com Practice</option><option>Section-wise Practice</option>
+            </select>
+          </div>
+          <div class="fgrp"><label>Listening (/40)</label><input type="number" class="finp" id="sw-l" min="0" max="40"></div>
+          <div class="fgrp"><label>Reading (/40)</label><input type="number" class="finp" id="sw-r" min="0" max="40"></div>
+          <div class="fgrp"><label>Writing T1 (Band)</label><input type="number" class="finp" id="sw-w1" min="4" max="9" step="0.5"></div>
+          <div class="fgrp"><label>Writing T2 (Band)</label><input type="number" class="finp" id="sw-w2" min="4" max="9" step="0.5"></div>
+          <div class="fgrp"><label>Speaking</label><input type="text" class="finp" id="sw-sp" placeholder="6.0 / Good"></div>
+        </div>
+        <div class="fgrp" style="margin-bottom:12px;"><label>দুর্বল Question Type</label><input type="text" class="finp" id="sw-wk2"></div>
+        <div class="fgrp" style="margin-bottom:16px;"><label>এই সপ্তাহের Action Plan</label><textarea class="ftxt" id="sw-act"></textarea></div>
+        <div style="margin-bottom:12px;font-size:12px;color:var(--tm);">&#x26A0; <span style="color:var(--red);">*</span> চিহ্নিত ফিল্ড পূরণ করা আবশ্যক</div>
+        <button class="btn btnp" onclick="addScore()">&#x2705; স্কোর যোগ করুন</button>
+      </div>
+      <div class="card"><div class="ctit">স্কোর ইতিহাস</div><div id="sc-hist"></div></div>
+    </div>
+    <div class="page" id="page-errors">
+      <div class="stitle" style="margin-bottom:16px;">&#x1F4DD; ভুলের লগ (Error Log)</div>
+      <div class="card">
+        <div class="ctit">নতুন ভুল যোগ করুন</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div class="fgrp"><label>তারিখ</label><input type="date" class="finp" id="er-dt"></div>
+          <div class="fgrp"><label>Section</label>
+            <select class="fsel" id="er-sec">
+              <option value="">বেছে নিন</option>
+              <option>Listening</option><option>Reading</option><option>Writing</option>
+              <option>Speaking</option><option>Grammar</option><option>Vocabulary</option>
+            </select>
+          </div>
+        </div>
+        <div class="fgrp" style="margin-bottom:16px;"><label>ভুলের বিবরণ</label><textarea class="ftxt" id="er-txt" style="min-height:100px;"></textarea></div>
+        <button class="btn btnp" onclick="addErr()">&#x1F4DD; লগ যোগ করুন</button>
+      </div>
+      <div class="card">
+        <div class="shdr">
+          <div class="ctit" style="margin-bottom:0;">ভুলের ইতিহাস</div>
+          <select class="fsel" id="er-fil" onchange="renderErrors()" style="width:auto;padding:5px 10px;font-size:12px;">
+            <option value="">সব Section</option>
+            <option>Listening</option><option>Reading</option><option>Writing</option>
+            <option>Speaking</option><option>Grammar</option><option>Vocabulary</option>
+          </select>
+        </div>
+        <div id="err-list" style="margin-top:16px;"></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="toast"></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const EXAM=new Date('2027-01-25');
+const MOCKS=[
+  {date:'2026-12-03',label:'Cambridge 18 \u2014 Test 1',note:'\u09aa\u09cd\u09b0\u09a5\u09ae full mock\u0964 Timer set \u0995\u09b0\u09c1\u09a8, pause \u0995\u09b0\u09ac\u09c7\u09a8 \u09a8\u09be\u0964'},
+  {date:'2026-12-06',label:'Cambridge 18 \u2014 Test 2',note:'Test 1-\u098f\u09b0 error analysis \u09b6\u09c7\u09b7 \u0995\u09b0\u09c7 \u09a6\u09bf\u09a8\u0964'},
+  {date:'2026-12-10',label:'Cambridge 18 \u2014 Test 3',note:''},
+  {date:'2026-12-13',label:'Cambridge 18 \u2014 Test 4',note:''},
+  {date:'2026-12-16',label:'Cambridge 19 \u2014 Test 1',note:''},
+  {date:'2026-12-19',label:'Cambridge 19 \u2014 Test 2',note:''},
+  {date:'2026-12-21',label:'Cambridge 19 \u2014 Test 3',note:''},
+  {date:'2026-12-24',label:'Cambridge 19 \u2014 Test 4',note:''},
+  {date:'2026-12-27',label:'Cambridge 20 \u2014 Test 1',note:''},
+  {date:'2026-12-30',label:'Cambridge 20 \u2014 Test 2',note:''},
+  {date:'2027-01-01',label:'Cambridge 20 \u2014 Test 3',note:''},
+  {date:'2027-01-03',label:'Cambridge 20 \u2014 Test 4',note:''},
+  {date:'2027-01-07',label:'Cambridge 21 \u2014 Test 1',note:'\u09b8\u0995\u09be\u09b2\u09c7 \u09aa\u09b0\u09c0\u0995\u09cd\u09b7\u09be \u09a6\u09bf\u09a8\u0964'},
+  {date:'2027-01-10',label:'Cambridge 21 \u2014 Test 2',note:''},
+  {date:'2027-01-14',label:'Cambridge 21 \u2014 Test 3',note:''},
+  {date:'2027-01-16',label:'Cambridge 21 \u2014 Test 4',note:'\u098f\u09b0\u09aa\u09b0\u09c7 \u09a8\u09a4\u09c1\u09a8 test \u09a6\u09c7\u09ac\u09c7\u09a8 \u09a8\u09be\u0964'}
+];
+const PLAN=[
+  {ph:1,pn:'Foundation Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7-\u09e8',wn:'1-2',dr:'Sep 1-Sep 14',sd:'2026-09-01',ed:'2026-09-14',
+  goal:'\u09b6\u09c2\u09a8\u09cd\u09af \u09a5\u09c7\u0995\u09c7 \u09b6\u09c1\u09b0\u09c1\u0964 Grammar+Vocabulary \u09ad\u09bf\u09a4\u09cd\u09a4\u09bf, ear-training, CD-IELTS \u09aa\u09b0\u09bf\u099a\u09bf\u09a4\u09bf\u0964',
+  ms:['\u09ac\u09cd\u09b0\u09bf\u099f\u09bf\u09b6 \u0995\u09be\u0989\u09a8\u09cd\u09b8\u09bf\u09b2/IDP demo','\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 2 \u09b6\u09c7\u09b7\u09c7 Jumpinto diagnostic test'],
+  tasks:[
+    {id:'w1L',text:'Listening \u2014 Ear Training: BBC/Podcast (\u09b8\u09be\u09ac\u099f\u09be\u0987\u099f\u09c7\u09b2 \u09a6\u09bf\u09df\u09c7 \u09a4\u09be\u09b0\u09aa\u09b0 \u099b\u09be\u09dc\u09be)',time:30,tag:'listening',res:'BBC Learning English / YouTube'},
+    {id:'w1G',text:'Grammar \u2014 Cambridge Grammar for IELTS (1\u099f\u09bf Unit + exercise)',time:30,tag:'grammar',res:'Cambridge Grammar for IELTS'},
+    {id:'w1V',text:'Vocabulary \u2014 Cambridge Vocabulary (1 Unit) + derivatives \u09b6\u09bf\u0996\u09c1\u09a8',time:20,tag:'vocab',res:'Cambridge Vocabulary for IELTS'},
+    {id:'w1S',text:'Speaking \u2014 SmallTalk2Me-\u09a4\u09c7 casual free talk (fluency focus)',time:20,tag:'speaking',res:'SmallTalk2Me (free tier)'},
+    {id:'w1T',text:'Typing \u2014 10fingers.com-\u098f touch typing \u09b6\u09bf\u0996\u09c1\u09a8',time:15,tag:'typing',res:'10fingers.com'},
+    {id:'w1R',text:'Reading \u2014 \u0987\u0982\u09b0\u09c7\u099c\u09bf article \u09aa\u09dc\u09c1\u09a8, \u09ae\u09c2\u09b2 \u0985\u09b0\u09cd\u09a5 \u09a7\u09b0\u09c1\u09a8',time:15,tag:'reading',res:'BBC News / The Guardian'}
+  ]},
+  {ph:1,pn:'Foundation Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e9-\u09ea',wn:'3-4',dr:'Sep 15-Sep 28',sd:'2026-09-15',ed:'2026-09-28',
+  goal:'Foundation Deepening\u0964 Liz Listening \u09b6\u09c1\u09b0\u09c1, Common Mistakes Intermediate\u0964',
+  ms:['Liz Listening Strategies \u09b6\u09c1\u09b0\u09c1','Common Mistakes (Intermediate) \u09b6\u09c1\u09b0\u09c1'],
+  tasks:[
+    {id:'w3L',text:'Listening \u2014 Liz Listening Strategies (1-2 chapter/\u09a6\u09bf\u09a8) + BBC',time:35,tag:'listening',res:'Liz Listening Strategies + BBC'},
+    {id:'w3G',text:'Grammar \u2014 Cambridge Grammar (Tense, Articles, Prepositions)',time:25,tag:'grammar',res:'Cambridge Grammar for IELTS'},
+    {id:'w3V',text:'Vocabulary + Common Mistakes (Intermediate) \u09b6\u09c1\u09b0\u09c1 (3-4 section/\u09b8\u09aa\u09cd\u09a4\u09be\u09b9)',time:20,tag:'vocab',res:'Cambridge Vocabulary + Common Mistakes (Int)'},
+    {id:'w3S',text:'Speaking \u2014 SmallTalk2Me, 2 \u09ae\u09bf\u09a8 \u098f\u0995\u099f\u09be\u09a8\u09be \u09ac\u09b2\u09be\u09b0 practice',time:20,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w3T',text:'Typing \u2014 10fingers.com',time:15,tag:'typing',res:'10fingers.com'},
+    {id:'w3R',text:'Reading \u2014 Cambridge Official Guide, question types \u09aa\u09dc\u09c1\u09a8',time:15,tag:'reading',res:'Cambridge Official Guide'}
+  ]},
+  {ph:1,pn:'Foundation Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09eb-\u09ec',wn:'5-6',dr:'Sep 29-Oct 12',sd:'2026-09-29',ed:'2026-10-12',
+  goal:'Skill \u09b8\u09c7\u09a4\u09c1\u09ac\u09a8\u09cd\u09a7\u09a8\u0964 Section-wise practice \u09b6\u09c1\u09b0\u09c1, Writing-\u098f\u09b0 \u09aa\u09cd\u09b0\u09a5\u09ae \u0995\u09a6\u09ae\u0964',
+  ms:['Typing 30+ WPM','Section-wise Listening','\u09aa\u09cd\u09b0\u09a5\u09ae Writing paragraph'],
+  tasks:[
+    {id:'w5L',text:'Listening \u2014 Cambridge 15-16 section-wise (1-2/\u09a6\u09bf\u09a8), audio script \u09a6\u09bf\u09df\u09c7 \u09ad\u09c1\u09b2 analysis',time:40,tag:'listening',res:'Cambridge IELTS 15-16'},
+    {id:'w5G',text:'Grammar + Common Mistakes (Int) \u099a\u09be\u09b2\u09bf\u09df\u09c7 \u09af\u09be\u09a8',time:25,tag:'grammar',res:'Cambridge Grammar + Common Mistakes (Int)'},
+    {id:'w5V',text:'Vocabulary + \u0986\u0997\u09c7\u09b0 \u09b6\u09ac\u09cd\u09a6 revision',time:20,tag:'vocab',res:'Cambridge Vocabulary for IELTS'},
+    {id:'w5S',text:'Speaking \u2014 SmallTalk2Me, IELTS Part 1 questions practice',time:20,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w5R',text:'Reading \u2014 Cambridge 15-16, 1 passage (untimed)',time:15,tag:'reading',res:'Cambridge IELTS 15-16'},
+    {id:'w5W',text:'Writing \u2014 \u099b\u09cb\u099f paragraph, Grammarly \u09a6\u09bf\u09df\u09c7 check',time:15,tag:'writing',res:'Grammarly / grammar checker'},
+    {id:'w5T',text:'Typing \u2014 10fingers.com (Target: 30+ WPM)',time:10,tag:'typing',res:'10fingers.com'}
+  ]},
+  {ph:2,pn:'Skill Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09ed-\u09ef',wn:'7-9',dr:'Oct 13-Nov 2',sd:'2026-10-13',ed:'2026-11-02',
+  goal:'Strategy Learning\u0964 Prediction skills, Rachel Mitchell Writing, Jumpinto.com \u09b6\u09c1\u09b0\u09c1\u0964',
+  ms:['Rachel Mitchell Writing \u09b6\u09c1\u09b0\u09c1','Cambridge Write & Improve \u09b6\u09c1\u09b0\u09c1','Jumpinto.com \u09b6\u09c1\u09b0\u09c1','Common Mistakes (Advanced) \u09b6\u09c1\u09b0\u09c1'],
+  tasks:[
+    {id:'w7L',text:'Listening \u2014 Liz advanced + Cambridge 16 section-wise, prediction skills, trap \u099a\u09c7\u09a8\u09be',time:45,tag:'listening',res:'Liz Listening + Cambridge IELTS 16'},
+    {id:'w7W',text:'Writing \u2014 Rachel Mitchell (W7-8: Task 1, W9: Task 2) + Write & Improve',time:45,tag:'writing',res:'Rachel Mitchell + Cambridge Write & Improve'},
+    {id:'w7R',text:'Reading \u2014 Cambridge 16-17 timed (1 passage 20 min), skimming/scanning',time:30,tag:'reading',res:'Cambridge IELTS 16-17'},
+    {id:'w7S',text:'Speaking \u2014 SmallTalk2Me Part 1+2, cue card 2 min, filler words \u0995\u09ae\u09be\u09a8\u09cb',time:20,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w7V',text:'Vocabulary revision + Common Mistakes (Advanced) \u09b6\u09c1\u09b0\u09c1',time:20,tag:'vocab',res:'Cambridge Vocabulary + Common Mistakes (Adv)'},
+    {id:'w7T',text:'Typing \u2014 Target: 40+ WPM',time:10,tag:'typing',res:'10fingers.com'},
+    {id:'w7J',text:'Jumpinto.com \u2014 \u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 2-3 \u09ac\u09be\u09b0 section-wise practice',time:0,tag:'extra',res:'Jumpinto.com'}
+  ]},
+  {ph:2,pn:'Skill Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09e6-\u09e7\u09e7',wn:'10-11',dr:'Nov 3-Nov 16',sd:'2026-11-03',ed:'2026-11-16',
+  goal:'Intensive Practice\u0964 Cambridge 17, Part 2+3 Speaking, Writing 40 min-\u098f \u09b6\u09c7\u09b7 \u0995\u09b0\u09be\u0964',
+  ms:['Cambridge 17 section-wise \u09b6\u09c1\u09b0\u09c1','Common Mistakes (Adv) \u09b6\u09c7\u09b7','Writing 40 min \u0985\u09ad\u09cd\u09af\u09be\u09b8'],
+  tasks:[
+    {id:'w10L',text:'Listening \u2014 Cambridge 17 timed, Map/MCQ/Matching \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 type drill + Jumpinto',time:45,tag:'listening',res:'Cambridge IELTS 17 + Jumpinto.com'},
+    {id:'w10W',text:'Writing \u2014 Rachel Mitchell: Task 1 20min, Task 2 40min + Write & Improve',time:45,tag:'writing',res:'Rachel Mitchell + Write & Improve'},
+    {id:'w10R',text:'Reading \u2014 Cambridge 17 timed (3 passage 60 min), TF/NG + Matching Headings',time:30,tag:'reading',res:'Cambridge IELTS 17'},
+    {id:'w10S',text:'Speaking \u2014 SmallTalk2Me Part 2+3, longer answer (Point\u2192Reason\u2192Example)',time:20,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w10V',text:'Vocabulary + Error Log review + Common Mistakes (Adv) \u09b6\u09c7\u09b7',time:20,tag:'vocab',res:'Cambridge Vocabulary + Error Log'},
+    {id:'w10T',text:'Typing \u2014 40+ WPM maintain',time:10,tag:'typing',res:'10fingers.com'}
+  ]},
+  {ph:2,pn:'Skill Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09e8-\u09e7\u09e9',wn:'12-13',dr:'Nov 17-Nov 30',sd:'2026-11-17',ed:'2026-11-30',
+  goal:'Transition\u0964 Semi-mock, full Writing test, Reading timed, Speaking band descriptors\u0964',
+  ms:['Rachel Mitchell \u09b6\u09c7\u09b7','Semi-mock (L+R \u098f\u0995\u09b8\u09be\u09a5\u09c7)','Speaking band descriptors \u09aa\u09dc\u09c1\u09a8'],
+  tasks:[
+    {id:'w12L',text:'Listening \u2014 Cambridge 17 + Semi-mock (L+R \u098f\u0995\u09b8\u09be\u09a5\u09c7 timed)',time:40,tag:'listening',res:'Cambridge IELTS 17'},
+    {id:'w12W',text:'Writing \u2014 Rachel Mitchell \u09b6\u09c7\u09b7, \u09aa\u09cd\u09b0\u09a4\u09bf 2 \u09a6\u09bf\u09a8\u09c7 full test (60 min)',time:40,tag:'writing',res:'Rachel Mitchell + Write & Improve'},
+    {id:'w12R',text:'Reading \u2014 Full test (60 min: P1 18min, P2 20min, P3 22-25min)',time:35,tag:'reading',res:'Cambridge IELTS 17'},
+    {id:'w12S',text:'Speaking \u2014 Part 1+2+3 combined mock (SmallTalk2Me)',time:25,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w12V',text:'Revision \u2014 Error log, vocabulary, common mistakes',time:10,tag:'revision',res:'\u09a8\u09bf\u099c\u09c7\u09b0 error log'}
+  ]},
+  {ph:3,pn:'Mock Tests & Analysis',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09ea-\u09e7\u09eb',wn:'14-15',dr:'Dec 1-Dec 14',sd:'2026-12-01',ed:'2026-12-14',isMock:true,
+  goal:'Cambridge 18 \u09a6\u09bf\u09df\u09c7 \u09aa\u09cd\u09b0\u09a5\u09ae 4\u099f\u09bf full mock\u0964 Makkar Speaking \u0995\u09bf\u09a8\u09c1\u09a8\u0964 Error analysis \u09b6\u09c1\u09b0\u09c1\u0964',
+  ms:['Makkar Speaking \u0995\u09bf\u09a8\u09c1\u09a8','C18: T1(Dec3), T2(Dec6), T3(Dec10), T4(Dec13)'],
+  tasks:[
+    {id:'w14M',text:'MOCK TEST \u2014 Cambridge 18 (L:30+R:60+W:60 min, pause \u099b\u09be\u09dc\u09be)',time:180,tag:'mock',res:'Cambridge IELTS 18'},
+    {id:'w14E',text:'Error Analysis \u2014 Bangla Solution \u09a6\u09bf\u09df\u09c7 \u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u09ad\u09c1\u09b2 \u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3',time:60,tag:'mock',res:'Bangla Solution (18-21)'},
+    {id:'w14L',text:'Listening \u2014 Weak Area Repair (\u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 question type practice)',time:40,tag:'listening',res:'Cambridge 18 + Jumpinto.com'},
+    {id:'w14S',text:'Speaking \u2014 Makkar Speaking 5-7 cue card/\u09a6\u09bf\u09a8 + SmallTalk2Me',time:30,tag:'speaking',res:'Makkar Speaking + SmallTalk2Me'},
+    {id:'w14W',text:'Writing \u2014 \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 task focus + Cambridge Write & Improve',time:30,tag:'writing',res:'Cambridge Write & Improve'},
+    {id:'w14R',text:'Reading \u2014 Speed drill, scanning + keyword matching',time:20,tag:'reading',res:'Cambridge 18'},
+    {id:'w14T',text:'Typing \u2014 Maintain 45+ WPM',time:10,tag:'typing',res:'10fingers.com'}
+  ]},
+  {ph:3,pn:'Mock Tests & Analysis',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09ec-\u09e7\u09ed',wn:'16-17',dr:'Dec 15-Dec 28',sd:'2026-12-15',ed:'2026-12-28',isMock:true,
+  goal:'Cambridge 19+20 \u09a6\u09bf\u09df\u09c7 mock \u099a\u09be\u09b2\u09bf\u09df\u09c7 \u09af\u09be\u09a8\u0964 Score 7.0-\u098f\u09b0 \u09a6\u09bf\u0995\u09c7 \u09a8\u09bf\u09a8\u0964',
+  ms:['C19: T1(Dec16),T2(Dec19),T3(Dec21),T4(Dec24)','C20: T1(Dec27)'],
+  tasks:[
+    {id:'w16M',text:'MOCK TEST \u2014 Cambridge 19/20 (L:30+R:60+W:60, pause \u099b\u09be\u09dc\u09be)',time:180,tag:'mock',res:'Cambridge IELTS 19-20'},
+    {id:'w16E',text:'Error Analysis \u2014 Bangla Solution \u09a6\u09bf\u09df\u09c7 \u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3',time:60,tag:'mock',res:'Bangla Solution'},
+    {id:'w16L',text:'Listening \u2014 \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 type drill (Map/MCQ/Matching)',time:40,tag:'listening',res:'Cambridge 19-20 + Jumpinto.com'},
+    {id:'w16S',text:'Speaking \u2014 Makkar Speaking Part 2+3 (5-7 cue card/\u09a6\u09bf\u09a8)',time:30,tag:'speaking',res:'Makkar Speaking + SmallTalk2Me'},
+    {id:'w16W',text:'Writing \u2014 Weak area focus, Write & Improve feedback',time:30,tag:'writing',res:'Cambridge Write & Improve'},
+    {id:'w16R',text:'Reading \u2014 Speed drill',time:20,tag:'reading',res:'Cambridge 19-20'},
+    {id:'w16T',text:'Typing \u2014 Maintain 45+ WPM',time:10,tag:'typing',res:'10fingers.com'}
+  ]},
+  {ph:3,pn:'Mock Tests & Analysis',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09ee',wn:'18',dr:'Dec 29-Jan 4',sd:'2026-12-29',ed:'2027-01-04',isMock:true,
+  goal:'Cambridge 20 \u09b6\u09c7\u09b7 (T2:Dec30,T3:Jan1,T4:Jan3)\u0964 Weak area intensive repair\u0964',
+  ms:['C20: T2(Dec30),T3(Jan1),T4(Jan3)'],
+  tasks:[
+    {id:'w18M',text:'MOCK TEST \u2014 Cambridge 20 \u09b6\u09c7\u09b7 tests',time:180,tag:'mock',res:'Cambridge IELTS 20'},
+    {id:'w18E',text:'Error Analysis + \u0986\u0997\u09c7\u09b0 \u09b8\u09ac \u09ad\u09c1\u09b2\u09c7\u09b0 pattern review',time:60,tag:'mock',res:'Bangla Solution + Error Log'},
+    {id:'w18L',text:'Listening \u2014 \u09b8\u09ac\u099a\u09c7\u09df\u09c7 \u09ac\u09c7\u09b6\u09bf \u09ad\u09c1\u09b2 type-\u098f intensive drill',time:40,tag:'listening',res:'Cambridge 20 audio'},
+    {id:'w18S',text:'Speaking \u2014 Makkar cue card (5-7/\u09a6\u09bf\u09a8)',time:30,tag:'speaking',res:'Makkar Speaking'},
+    {id:'w18W',text:'Writing \u2014 Best essays revise, linking words \u09ae\u09a8\u09c7 \u09b0\u09be\u0996\u09c1\u09a8',time:30,tag:'writing',res:'\u09a8\u09bf\u099c\u09c7\u09b0 essays + Write & Improve'},
+    {id:'w18V',text:'Total Revision \u2014 Error log, vocabulary, common mistakes',time:20,tag:'revision',res:'\u09a8\u09bf\u099c\u09c7\u09b0 notes'}
+  ]},
+  {ph:4,pn:'Final Polish',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09ef-\u09e8\u09e6',wn:'19-20',dr:'Jan 5-Jan 18',sd:'2027-01-05',ed:'2027-01-18',isMock:true,
+  goal:'Cambridge 21 \u09a6\u09bf\u09df\u09c7 final mocks\u0964 Confidence maximize\u0964 \u0995\u09cb\u09a8\u09cb \u09a8\u09a4\u09c1\u09a8 \u0995\u09bf\u099b\u09c1 \u09b6\u09c7\u0996\u09be\u09b0 \u099a\u09c7\u09b7\u09cd\u099f\u09be \u09a8\u09df\u0964',
+  ms:['C21: T1(Jan7),T2(Jan10),T3(Jan14),T4(Jan16 \u09b6\u09c7\u09b7 mock)'],
+  tasks:[
+    {id:'w19M',text:'FINAL MOCK \u2014 Cambridge 21 (\u09b8\u0995\u09be\u09b2\u09c7, real exam condition)',time:180,tag:'mock',res:'Cambridge IELTS 21'},
+    {id:'w19E',text:'Error Analysis + pattern review',time:60,tag:'mock',res:'Bangla Solution (21)'},
+    {id:'w19S',text:'Speaking \u2014 Makkar cue card (\u0995\u09a0\u09bf\u09a8 ones \u09ac\u09be\u09b0\u09ac\u09be\u09b0), SmallTalk2Me full mock',time:30,tag:'speaking',res:'Makkar Speaking + SmallTalk2Me'},
+    {id:'w19L',text:'Listening \u2014 \u0986\u0997\u09c7\u09b0 \u09ad\u09c1\u09b2\u09c7\u09b0 audio re-listen',time:30,tag:'listening',res:'Cambridge 21 audio'},
+    {id:'w19W',text:'Writing \u2014 Best essays revise, Task 1+2 opening paragraph',time:20,tag:'writing',res:'\u09a8\u09bf\u099c\u09c7\u09b0 essays'},
+    {id:'w19R',text:'Reading \u2014 Speed drill, \u0986\u0997\u09c7\u09b0 \u09ad\u09c1\u09b2\u09c7\u09b0 revision',time:20,tag:'reading',res:'\u09a8\u09bf\u099c\u09c7\u09b0 notes'},
+    {id:'w19V',text:'Total Revision \u2014 Error log, vocabulary, common mistakes',time:20,tag:'revision',res:'\u09b8\u09ac notes'}
+  ]},
+  {ph:4,pn:'Final Polish',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e8\u09e7 \u2014 \u09aa\u09b0\u09c0\u0995\u09cd\u09b7\u09be\u09b0 \u09b8\u09aa\u09cd\u09a4\u09be\u09b9',wn:'21',dr:'Jan 19-Jan 24',sd:'2027-01-19',ed:'2027-01-24',
+  goal:'\u0995\u09cb\u09a8\u09cb \u09a8\u09a4\u09c1\u09a8 test \u09ac\u09be \u0995\u09bf\u099b\u09c1 \u09b6\u09c7\u0996\u09be\u09b0 \u099a\u09c7\u09b7\u09cd\u099f\u09be \u09a8\u09be! \u09b6\u09c1\u09a7\u09c1 revision \u0993 rest\u0964',
+  tasks:[
+    {id:'w21Mo',text:'\u09b8\u09cb\u09ae (Jan 19): Error log final revision + Makkar common 10\u099f\u09bf cue card',time:90,tag:'revision',res:'Error log + Makkar Speaking'},
+    {id:'w21Tu',text:'\u09ae\u0999\u09cd\u0997\u09b2 (Jan 20): Writing template revision + 1 Task 1 + 1 Task 2',time:60,tag:'writing',res:'\u09a8\u09bf\u099c\u09c7\u09b0 Writing notes'},
+    {id:'w21We',text:'\u09ac\u09c1\u09a7 (Jan 21): Listening \u09ad\u09c1\u09b2\u09c7\u09b0 audio re-listen + Reading favourite passages',time:60,tag:'revision',res:'Cambridge audio + Reading notes'},
+    {id:'w21Th',text:'\u09ac\u09c3\u09b9\u09b8 (Jan 22): Light revision + Speaking 15 min + Exam center route confirm',time:30,tag:'revision',res:'Makkar Speaking (15 min)'},
+    {id:'w21Fr',text:'\u09b6\u09c1\u0995\u09cd\u09b0 (Jan 23): \u0995\u09bf\u099b\u09c1\u0987 \u09aa\u09dc\u09ac\u09c7\u09a8 \u09a8\u09be! \u09ac\u09bf\u09b6\u09cd\u09b0\u09be\u09ae \u09a8\u09bf\u09a8, \u09ad\u09be\u09b2\u09cb \u0996\u09be\u09a8, \u09a4\u09be\u09dc\u09be\u09a4\u09be\u09dc\u09bf \u0998\u09c1\u09ae\u09be\u09a8\u0964 Passport/ID ready\u0964',time:0,tag:'revision',res:'---'},
+    {id:'w21Ex',text:'EXAM DAY! \u09b6\u09be\u09a8\u09cd\u09a4 \u09a5\u09be\u0995\u09c1\u09a8\u0964 5 \u09ae\u09be\u09b8 \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4\u09bf \u09a8\u09bf\u09df\u09c7\u099b\u09c7\u09a8 \u2014 \u0986\u09a4\u09cd\u09ae\u09ac\u09bf\u09b6\u09cd\u09ac\u09be\u09b8 \u09b0\u09be\u0996\u09c1\u09a8!',time:0,tag:'mock',res:'---'}
+  ]}
+];
+const RES=[
+  {n:'Cambridge Grammar for IELTS',p:'Phase 1 (W1-6)',h:'\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 1 Unit, Grammar foundation'},
+  {n:'Cambridge Vocabulary for IELTS',p:'Phase 1-2 (W1-13)',h:'\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 1 Unit, Phase 2-\u09a4\u09c7 revision'},
+  {n:'Common Mistakes (Intermediate)',p:'Phase 1 (W3-6)',h:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 3-4 section'},
+  {n:'Common Mistakes (Advanced)',p:'Phase 2 (W7-10)',h:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 3-4 section'},
+  {n:'Cambridge Official Guide',p:'Phase 1-2 (W2-8)',h:'Format \u09ac\u09cb\u099d\u09be, strategy \u09b6\u09c7\u0996\u09be'},
+  {n:'Liz Listening Strategies',p:'Phase 1-2 (W1-10)',h:'Listening strategy \u0993 technique'},
+  {n:'Rachel Mitchell Writing',p:'Phase 2 (W7-13)',h:'Task 1+2 structure \u0993 template'},
+  {n:'Cambridge IELTS 15-16',p:'Phase 1 (W4-6)',h:'Section-wise practice'},
+  {n:'Cambridge IELTS 17',p:'Phase 2 (W10-11)',h:'Section-wise timed practice'},
+  {n:'Cambridge IELTS 18',p:'Phase 3 (W14-15)',h:'Full Mock Test #1-4'},
+  {n:'Cambridge IELTS 19',p:'Phase 3 (W15-16)',h:'Full Mock Test #5-8'},
+  {n:'Cambridge IELTS 20',p:'Phase 3 (W17-18)',h:'Full Mock Test #9-12'},
+  {n:'Cambridge IELTS 21',p:'Phase 4 (W19-20)',h:'Final Mock Test #13-16'},
+  {n:'Bangla Solution (18-21)',p:'Phase 3-4',h:'Mock \u09aa\u09b0\u09c7 error analysis'},
+  {n:'Makkar Speaking',p:'Phase 3-4 (Dec \u0995\u09bf\u09a8\u09c1\u09a8)',h:'\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 5-7 cue card'},
+  {n:'SmallTalk2Me',p:'\u09b8\u09be\u09b0\u09be\u09b8\u09ae\u09df',h:'\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 15-20 min AI speaking'},
+  {n:'10fingers.com',p:'\u09b8\u09be\u09b0\u09be\u09b8\u09ae\u09df',h:'\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 15 min, target 40+ WPM'},
+  {n:'Cambridge Write & Improve',p:'Phase 2-4 (W7+)',h:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 3-4 \u09ac\u09be\u09b0 essay submit'},
+  {n:'Jumpinto.com',p:'Phase 2-3 (W7-18)',h:'Section-wise practice, CD interface'}
+];
+
+function tod(){const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+function ds(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function tds(){return ds(tod());}
+function inr(s,a,b){return s>=a&&s<=b;}
+function pcc(p){return ['','p1','p2','p3','p4'][p];}
+function pcol(p){return ['','var(--p1c)','var(--p2c)','var(--p3c)','var(--p4c)'][p];}
+function gwk(s){return PLAN.find(w=>inr(s,w.sd,w.ed))||null;}
+function gmk(s){return MOCKS.find(m=>m.date===s)||null;}
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA5tFj1_TeMYznXGt0X7jhfm0n4ulOYPgY",
+  authDomain: "ielts-tracker-a17ce.firebaseapp.com",
+  projectId: "ielts-tracker-a17ce",
+  storageBucket: "ielts-tracker-a17ce.firebasestorage.app",
+  messagingSenderId: "161618340203",
+  appId: "1:161618340203:web:d419e01d794999b99c842e",
+  measurementId: "G-MJQVQHY2PF"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const docRef = doc(db, "users", "main_user");
+
+let APP_DATA = { ielts_c: {}, ielts_sc: [], ielts_er: [], ielts_dl: {} };
+let _appInited = false;
+let _isSaving = false;
+
+onSnapshot(docRef,
+  (docSnap) => {
+    if (_isSaving) return;
+    if (docSnap.exists()) APP_DATA = { ...APP_DATA, ...docSnap.data() };
+    if (!_appInited) { _appInited = true; init(); }
+    else { liveRefresh(); }
+    setSyncStatus('synced');
+  },
+  (err) => {
+    console.error('Firestore error', err);
+    setSyncStatus('error');
+    if (!_appInited) { _appInited = true; init(); }
+  }
+);
+
+async function saveData() {
+  _isSaving = true;
+  setSyncStatus('saving');
+  try { 
+    await Promise.race([
+      setDoc(docRef, APP_DATA),
+      new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 4000))
+    ]);
+    setSyncStatus('synced'); 
+  }
+  catch(e) { 
+    console.error('Firebase save error', e); 
+    setSyncStatus('error'); 
+    toast('\u26A0 DB Error! Check Firebase setup.'); 
+  }
+  finally {
+    setTimeout(() => { _isSaving = false; }, 600);
+  }
+}
+
+const gc=()=>APP_DATA.ielts_c;
+const scc=o=>{ APP_DATA.ielts_c=o; saveData(); };
+const gsc=()=>APP_DATA.ielts_sc;
+const ssc=a=>{ APP_DATA.ielts_sc=a; saveData(); };
+const ger=()=>APP_DATA.ielts_er;
+const ser=a=>{ APP_DATA.ielts_er=a; saveData(); };
+const gdl=()=>APP_DATA.ielts_dl;
+const sdl=o=>{ APP_DATA.ielts_dl=o; saveData(); };
+
+function setSyncStatus(status){
+  const el=document.getElementById('sync-status');if(!el)return;
+  if(status==='saving'){el.textContent='\u23F3 \u09B8\u09C7\u09AD \u09B9\u099A\u09CD\u099B\u09C7...';el.style.color='var(--orange)';el.style.borderColor='rgba(210,153,34,.4)';}
+  else if(status==='synced'){el.textContent='\u2705 \u09B8\u09BF\u0999\u09CD\u0995 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7';el.style.color='var(--green)';el.style.borderColor='rgba(63,185,80,.4)';}
+  else{el.textContent='\u26A0 \u0985\u09AB\u09B2\u09BE\u0987\u09A8';el.style.color='var(--red)';el.style.borderColor='rgba(248,81,73,.4)';}
+}
+
+function liveRefresh(){
+  updateStats();updateTodayCnt();
+  document.getElementById('streak-display').textContent='\uD83D\uDD25 '+streak()+' \u09A6\u09BF\u09A8';
+  const t=tds(),wk=gwk(t);
+  if(wk){const cont=document.getElementById('today-tasks');if(cont)renderTasks(cont,wk.tasks,t);}
+  const activePage=document.querySelector('.page.active');
+  if(activePage&&activePage.id==='page-scores')renderScHist();
+  if(activePage&&activePage.id==='page-errors')renderErrors();
+  if(activePage&&activePage.id==='page-progress')renderChart();
+  if(activePage&&activePage.id==='page-plan')renderPlan();
+  if(activePage&&activePage.id==='page-calendar')renderCal();
+}
+function streak(){
+  const log=gdl();let s=0;const d=new Date(tod());
+  for(let i=0;i<365;i++){const k=ds(d);if(log[k]){s++;d.setDate(d.getDate()-1);}else if(i===0){d.setDate(d.getDate()-1);}else break;}
+  return s;
+}
+function markDay(){
+  const chk=gc(),t=tds(),wk=gwk(t);if(!wk)return;
+  let any=false;for(const tk of wk.tasks){if(chk[t+'__'+tk.id]){any=true;break;}}
+  const log=gdl();if(any)log[t]=true;else delete log[t];sdl(log);
+}
+function toast(msg,isErr){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  if(isErr){t.style.borderColor='var(--red)';t.style.color='var(--red)';t.style.background='rgba(248,81,73,.12)';}
+  else{t.style.borderColor='';t.style.color='';t.style.background='';}
+  t.classList.add('show');
+  setTimeout(()=>{t.classList.remove('show');t.style.borderColor='';t.style.color='';t.style.background='';},isErr?3500:2500);
+}
+function toggleTask(key){
+  const chk=gc();chk[key]=!chk[key];scc(chk);markDay();
+  const item=document.getElementById('ti-'+key);
+  if(item)item.classList.toggle('done',!!chk[key]);
+  document.getElementById('streak-display').textContent='\uD83D\uDD25 '+streak()+' \u09A6\u09BF\u09A8';
+  updateStats();updateTodayCnt();
+  if(chk[key]){
+    const t=tds(),wk=gwk(t);
+    if(wk){
+      const allDone=wk.tasks.every(tk=>chk[t+'__'+tk.id]);
+      if(allDone)toast('\uD83C\uDF89 \u0985\u09B8\u09BE\u09A7\u09BE\u09B0\u09A3! \u0986\u099C\u0995\u09C7\u09B0 \u09B8\u09AC \u0995\u09BE\u099C \u09B6\u09C7\u09B7! \uD83D\uDCAA');
+      else toast('\u2705 \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8!');
+    } else toast('\u2705 \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8!');
+  } else toast('\u21A9 \u09AA\u09C2\u09B0\u09CD\u09AC\u09BE\u09AC\u09B8\u09CD\u09A5\u09BE\u09AF\u09BC');
+}
+const TLBL={listening:'Listening',speaking:'Speaking',reading:'Reading',writing:'Writing',grammar:'Grammar',vocab:'Vocabulary',typing:'Typing',mock:'Mock Test',revision:'Revision',extra:'Tool'};
+function renderTasks(cont,tasks,day){
+  const chk=gc();
+  if(!tasks||!tasks.length){cont.innerHTML='<div class="empty"><div class="ei">\uD83D\uDCED</div>\u098F\u0987 \u09A6\u09BF\u09A8\u09C7\u09B0 \u0995\u09CB\u09A8\u09CB task \u09A8\u09C7\u0987\u0964</div>';return;}
+  cont.innerHTML=tasks.map(t=>{
+    const key=day+'__'+t.id,done=!!chk[key];
+    return '<div class="titem'+(done?' done':'')+'" onclick="toggleTask(\''+key+'\')" id="ti-'+key+'"><div class="tchk"></div><div class="tbdy"><div class="ttx">'+t.text+'</div><div class="tmta">'+(t.time>0?'<span class="ttm">\u23F1 '+t.time+' \u09AE\u09BF\u09A8\u09BF\u099F</span>':'')+'<span class="ttag tag-'+t.tag+'">'+(TLBL[t.tag]||t.tag)+'</span>'+(t.res?'<span class="tres">\uD83D\uDCD6 '+t.res+'</span>':'')+'</div></div></div>';
+  }).join('');
+}
+function updateTodayCnt(){
+  const t=tds(),wk=gwk(t);if(!wk)return;
+  const chk=gc();let done=0;
+  for(const tk of wk.tasks)if(chk[t+'__'+tk.id])done++;
+  const el=document.getElementById('s-today');if(el)el.textContent=done+'/'+wk.tasks.length;
+}
+function renderToday(){
+  const t=tds(),wk=gwk(t),mk=gmk(t);
+  const dLeft=Math.ceil((EXAM-tod())/86400000);
+  document.getElementById('t-date').textContent=tod().toLocaleDateString('bn-BD',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('s-days').textContent=dLeft>0?dLeft:(dLeft===0?'\u0986\u099C\u0987!':'\u09B6\u09C7\u09B7');
+  if(t<'2026-09-01'){
+    document.getElementById('t-head').textContent='\u23F3 \u09AA\u09CD\u09B0\u09B8\u09CD\u09A4\u09C1\u09A4\u09BF \u09B6\u09C1\u09B0\u09C1 \u09B9\u09AF\u09BC\u09A8\u09BF';
+    document.getElementById('t-week').textContent='\u09AA\u09CD\u09B0\u09B8\u09CD\u09A4\u09C1\u09A4\u09BF 1 \u09B8\u09C7\u09AA\u09CD\u09A4\u09C7\u09AE\u09CD\u09AC\u09B0 2026 \u09A5\u09C7\u0995\u09C7 \u09B6\u09C1\u09B0\u09C1 \u09B9\u09AC\u09C7\u0964';
+    document.getElementById('t-phase').innerHTML='<span class="pbdg p1">\uD83C\uDF31 \u09B6\u09C1\u09B0\u09C1\u09B0 \u0985\u09AA\u09C7\u0995\u09CD\u09B7\u09BE\u09AF\u09BC</span>';
+    document.getElementById('today-tasks').innerHTML='<div class="empty"><div class="ei">\uD83D\uDCC5</div>\u09AA\u09CD\u09B0\u09B8\u09CD\u09A4\u09C1\u09A4\u09BF 1 \u09B8\u09C7\u09AA\u09CD\u09A4\u09C7\u09AE\u09CD\u09AC\u09B0 2026 \u09A5\u09C7\u0995\u09C7 \u09B6\u09C1\u09B0\u09C1 \u09B9\u09AC\u09C7\u0964</div>';
+    return;
+  }
+  if(t>'2027-01-25'){
+    document.getElementById('t-head').textContent='\uD83C\uDF93 \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8!';
+    document.getElementById('t-phase').innerHTML='<span class="pbdg p4">\u2728 \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u09B6\u09C7\u09B7</span>';
+    document.getElementById('today-tasks').innerHTML='';return;
+  }
+  if(mk){
+    document.getElementById('t-head').textContent='\uD83E\uDDEA \u0986\u099C Mock Test!';
+    const mn=document.createElement('div');mn.className='mnot';
+    mn.innerHTML='\uD83D\uDD34 <strong>'+mk.label+'</strong>'+(mk.note?' \u2014 '+mk.note:'');
+    const card=document.getElementById('today-tasks').parentNode;
+    card.insertBefore(mn,document.getElementById('today-tasks'));
+  }else document.getElementById('t-head').textContent='\uD83D\uDCDA \u0986\u099C\u0995\u09C7\u09B0 \u09AA\u09DC\u09BE\u09B0 \u09B8\u09AE\u09AF\u09BC';
+  if(wk){
+    document.getElementById('t-phase').innerHTML='<span class="pbdg '+pcc(wk.ph)+'">Phase '+wk.ph+': '+wk.pn+'</span>';
+    document.getElementById('t-week').textContent=wk.wl+' ('+wk.dr+')';
+    renderTasks(document.getElementById('today-tasks'),wk.tasks,t);
+  }else document.getElementById('today-tasks').innerHTML='<div class="empty"><div class="ei">\uD83D\uDCED</div>\u098F\u0987 \u09A6\u09BF\u09A8\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u0995\u09CB\u09A8\u09CB task \u09A8\u09C7\u0987\u0964</div>';
+}
+function updateStats(){
+  const chk=gc(),str=streak();
+  let tot=0,done=0;const ps={1:{t:0,d:0},2:{t:0,d:0},3:{t:0,d:0},4:{t:0,d:0}};
+  for(const w of PLAN){
+    for(let d=new Date(w.sd);d<=new Date(w.ed);d.setDate(d.getDate()+1)){
+      const dss=ds(d);
+      for(const tk of w.tasks){tot++;ps[w.ph].t++;if(chk[dss+'__'+tk.id]){done++;ps[w.ph].d++;}}
+    }
+  }
+  const pct=tot?Math.round(done/tot*100):0;
+  const upd=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  upd('s-pct',pct+'%');upd('s-str',str);upd('p-tot',pct+'%');upd('p-str',str);upd('p-done',done);upd('p-all',tot);
+  document.getElementById('streak-display').textContent='\uD83D\uDD25 '+str+' \u09A6\u09BF\u09A8';
+  const bars=document.getElementById('phase-bars');
+  if(bars){
+    const pn={1:'Phase 1 \u2014 Foundation',2:'Phase 2 \u2014 Skill Building',3:'Phase 3 \u2014 Mock Tests',4:'Phase 4 \u2014 Final Polish'};
+    const pcls={1:'fp1',2:'fp2',3:'fp3',4:'fp4'};
+    bars.innerHTML=Object.entries(ps).map(([p,st])=>{
+      const pp=st.t?Math.round(st.d/st.t*100):0;
+      return '<div class="pbwrp"><div class="pbhdr"><span>'+pn[p]+'</span><span>'+st.d+'/'+st.t+' ('+pp+'%)</span></div><div class="pbtrk"><div class="pbfil '+pcls[p]+'" style="width:'+pp+'%"></div></div></div>';
+    }).join('');
+  }
+}
+let curP=1;
+function showPhase(p){
+  curP=p;[1,2,3,4].forEach(i=>{const b=document.getElementById('ptab-'+i);if(b)b.classList.toggle('active',i===p);});
+  renderPlan();
+}
+function renderPlan(){
+  const cont=document.getElementById('plan-cont');
+  const openIds = Array.from(cont.querySelectorAll('.wbdy.open')).map(el=>el.id);
+  const chk=gc();
+  const weeks=PLAN.filter(w=>w.ph===curP);let html='';
+  for(const wk of weeks){
+    let wt=0,wd=0;
+    for(let d=new Date(wk.sd);d<=new Date(wk.ed);d.setDate(d.getDate()+1)){
+      const dss=ds(d);for(const tk of wk.tasks){wt++;if(chk[dss+'__'+tk.id])wd++;}}
+    const wp=wt?Math.round(wd/wt*100):0;
+    const wid='wk'+wk.wn.replace(/-/g,'');
+    const isOp = openIds.includes(wid);
+    html+='<div class="wsec"><div class="whdr" onclick="togW(\''+wid+'\')"><div class="wtit">'+wk.wl+' <span class="wdt">'+wk.dr+'</span></div><div class="wpi"><span>'+wd+'/'+wt+'</span><div style="width:60px;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;"><div style="width:'+wp+'%;height:100%;background:'+pcol(curP)+';border-radius:3px;"></div></div><span>'+wp+'%</span><span id="arr-'+wid+'" style="color:var(--tm);">'+(isOp?'\u25B2':'\u25BC')+'</span></div></div><div class="wbdy'+(isOp?' open':'')+'" id="'+wid+'"><div class="wgl">\uD83C\uDFAF '+wk.goal+'</div>'+(wk.isMock?'<div class="mnot">\uD83D\uDD34 Mock Test \u09B8\u09AA\u09CD\u09A4\u09BE\u09B9 \u2014 \u09A8\u09BF\u09B0\u09CD\u09A6\u09BF\u09B7\u09CD\u099F \u09A4\u09BE\u09B0\u09BF\u0996\u09C7 full mock \u09A6\u09BF\u09A8\u0964 Error analysis \u09AC\u09BE\u09A7\u09CD\u09AF\u09A4\u09BE\u09AE\u09C2\u09B2\u0995\u0964</div>':'')+(wk.ms&&wk.ms.length?'<div class="tip">\uD83C\uDFC1 Milestone: '+wk.ms.join(' | ')+'</div>':'')+'<div class="tlist" id="tl-'+wid+'"></div></div></div>';
+  }
+  cont.innerHTML=html;
+  for(const wk of weeks){
+    const wid='wk'+wk.wn.replace(/-/g,'');
+    const tl=document.getElementById('tl-'+wid);
+    if(tl)renderTasks(tl,wk.tasks,wk.sd);
+  }
+}
+function togW(id){
+  const b=document.getElementById(id),a=document.getElementById('arr-'+id);
+  if(!b)return;b.classList.toggle('open');if(a)a.textContent=b.classList.contains('open')?'\u25B2':'\u25BC';
+}
+let cY=2026,cM=8;
+function initCal(){
+  const hs=['\u09B0\u09AC\u09BF','\u09B8\u09CB\u09AE','\u09AE\u0999\u09CD\u0997\u09B2','\u09AC\u09C1\u09A7','\u09AC\u09C3\u09B9\u09B8\u09CD\u09AA\u09A4\u09BF','\u09B6\u09C1\u0995\u09CD\u09B0','\u09B6\u09A8\u09BF'];
+  document.getElementById('cal-hdrs').innerHTML=hs.map(h=>'<div class="cdhdr">'+h+'</div>').join('');renderCal();
+}
+function calNav(dir){cM+=dir;if(cM>11){cM=0;cY++;}if(cM<0){cM=11;cY--;}renderCal();}
+function renderCal(){
+  const mns=['\u099C\u09BE\u09A8\u09C1\u09AF\u09BC\u09BE\u09B0\u09BF','\u09AB\u09C7\u09AC\u09CD\u09B0\u09C1\u09AF\u09BC\u09BE\u09B0\u09BF','\u09AE\u09BE\u09B0\u09CD\u099A','\u098F\u09AA\u09CD\u09B0\u09BF\u09B2','\u09AE\u09C7','\u099C\u09C1\u09A8','\u099C\u09C1\u09B2\u09BE\u0987','\u0986\u0997\u09B8\u09CD\u099F','\u09B8\u09C7\u09AA\u09CD\u09A4\u09C7\u09AE\u09CD\u09AC\u09B0','\u0985\u0995\u09CD\u099F\u09CB\u09AC\u09B0','\u09A8\u09AD\u09C7\u09AE\u09CD\u09AC\u09B0','\u09A1\u09BF\u09B8\u09C7\u09AE\u09CD\u09AC\u09B0'];
+  document.getElementById('cal-tit').textContent=mns[cM]+' '+cY;
+  const fd=new Date(cY,cM,1).getDay(),dim=new Date(cY,cM+1,0).getDate();
+  const chk=gc(),ts=tds();let html='';
+  for(let i=0;i<fd;i++)html+='<div class="cday empty"></div>';
+  for(let day=1;day<=dim;day++){
+    const dss=cY+'-'+String(cM+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+    const isT=dss===ts,mk=gmk(dss),isE=dss==='2027-01-25'||dss==='2027-01-24';
+    const wk=gwk(dss),inR=dss>='2026-09-01'&&dss<='2027-01-25';
+    let anyD=false;if(wk){for(const tk of wk.tasks){if(chk[dss+'__'+tk.id]){anyD=true;break;}}}
+    let cls='cday',sty='';
+    if(!inR)cls+=' out';else if(isE)cls+=' examd';else if(mk)cls+=' mockd';
+    else if(wk){const pbm={1:'rgba(26,127,55,.08)',2:'rgba(31,111,235,.08)',3:'rgba(210,153,34,.08)',4:'rgba(188,140,255,.08)'};sty='background:'+pbm[wk.ph]+';';}
+    if(isT)cls+=' today';if(anyD)cls+=' hasd';
+    html+='<div class="'+cls+'" style="'+sty+'" onclick="calClick(\''+dss+'\')" title="'+(mk?mk.label:(wk?wk.wl:''))+'">'+(isE?'\uD83C\uDFAF':mk?'\uD83E\uDDEA':day)+(anyD||mk?'<div class="cdot"></div>':'')+'</div>';
+  }
+  document.getElementById('cal-grid').innerHTML=html;
+}
+function calClick(dss){
+  const wk=gwk(dss),mk=gmk(dss);
+  const det=document.getElementById('cal-det'),dt=document.getElementById('cal-det-tit'),dtk=document.getElementById('cal-det-tasks');
+  det.style.display='block';
+  const dobj=new Date(dss+'T00:00:00');
+  dt.textContent=dobj.toLocaleDateString('bn-BD',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  if(dss==='2027-01-25'||dss==='2027-01-24'){dtk.innerHTML='<div style="text-align:center;padding:24px;font-size:20px;">\uD83C\uDFAF \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE\u09B0 \u09A6\u09BF\u09A8! \u09B6\u09C1\u09AD\u0995\u09BE\u09AE\u09A8\u09BE!</div>';return;}
+  let x='';if(mk)x='<div class="mnot">\uD83D\uDD34 <strong>'+mk.label+'</strong>'+(mk.note?' \u2014 '+mk.note:'')+'</div>';
+  if(wk){
+    dtk.innerHTML=x+'<div class="wgl" style="margin-bottom:10px;">Phase '+wk.ph+' \u2014 '+wk.wl+'</div>';
+    const tl=document.createElement('div');tl.className='tlist';dtk.appendChild(tl);renderTasks(tl,wk.tasks,dss);
+  }else dtk.innerHTML=x+'<div class="empty"><div class="ei">\uD83D\uDCED</div>\u098F\u0987 \u09A6\u09BF\u09A8\u09C7\u09B0 \u0995\u09CB\u09A8\u09CB task \u09A8\u09C7\u0987\u0964</div>';
+  det.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function initSW(){
+  const sel=document.getElementById('sw-wk');
+  PLAN.forEach(w=>{const o=document.createElement('option');o.value=w.wn;o.textContent=w.wl+' ('+w.dr+')';sel.appendChild(o);});
+  document.getElementById('sw-dt').value=tds();document.getElementById('er-dt').value=tds();
+}
+let scChart=null;
+function addScore(){
+  const wk=document.getElementById('sw-wk').value,dt=document.getElementById('sw-dt').value;
+  if(!wk||!dt){toast('\u26A0 \u09B8\u09AA\u09CD\u09A4\u09BE\u09B9 (*) \u0993 \u09A4\u09BE\u09B0\u09BF\u0996 (*) \u0986\u09AC\u09B6\u09CD\u09AF\u0995! \u0985\u09A8\u09C1\u0997\u09CD\u09B0\u09B9 \u0995\u09B0\u09C7 \u09AA\u09C2\u09B0\u09A3 \u0995\u09B0\u09C1\u09A8\u0964',true);return;}
+  const s={id:Date.now(),week:wk,date:dt,src:document.getElementById('sw-src').value,
+    l:+document.getElementById('sw-l').value||null,r:+document.getElementById('sw-r').value||null,
+    w1:document.getElementById('sw-w1').value||null,w2:document.getElementById('sw-w2').value||null,
+    sp:document.getElementById('sw-sp').value||null,weak:document.getElementById('sw-wk2').value||null,
+    action:document.getElementById('sw-act').value||null};
+  const scs=gsc();scs.unshift(s);ssc(scs);renderScHist();renderChart();
+  ['sw-l','sw-r','sw-w1','sw-w2','sw-sp','sw-wk2','sw-act'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  toast('\u2705 \u09B8\u09CD\u0995\u09CB\u09B0 \u09AF\u09CB\u0997 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7!');
+}
+function delScore(id){
+  if(!confirm('\u098F\u0987 \u09B8\u09CD\u0995\u09CB\u09B0 \u09AE\u09C1\u099B\u09AC\u09C7\u09A8?'))return;ssc(gsc().filter(s=>s.id!==id));renderScHist();renderChart();toast('\uD83D\uDDD1 \u09AE\u09C1\u099B\u09C7 \u09AB\u09C7\u09B2\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7');
+}
+function bchip(v){
+  if(v===null||v===undefined||v==='')return '<span style="color:var(--tm)">\u2014</span>';
+  const p=v/40;return '<span class="bchip '+(p>=0.65?'bg7':p>=0.55?'bg6':'bgl')+'">'+v+'</span>';
+}
+function renderScHist(){
+  const scs=gsc(),cont=document.getElementById('sc-hist');
+  if(!scs.length){cont.innerHTML='<div class="empty"><div class="ei">\uD83D\uDCCA</div>\u098F\u0996\u09A8\u09CB \u0995\u09CB\u09A8\u09CB \u09B8\u09CD\u0995\u09CB\u09B0 \u09A8\u09C7\u0987\u0964</div>';return;}
+  cont.innerHTML='<div style="overflow-x:auto;"><table class="dtbl"><thead><tr><th>\u09A4\u09BE\u09B0\u09BF\u0996</th><th>\u09B8\u09AA\u09CD\u09A4\u09BE\u09B9</th><th>Source</th><th>L(/40)</th><th>R(/40)</th><th>WT1</th><th>WT2</th><th>Speaking</th><th>\u09A6\u09C1\u09B0\u09CD\u09AC\u09B2 Area</th><th></th></tr></thead><tbody>'+scs.map(s=>'<tr><td style="white-space:nowrap;color:var(--t2);">'+s.date+'</td><td>W'+s.week+'</td><td style="font-size:12px;color:var(--t2);">'+(s.src||'\u2014')+'</td><td>'+bchip(s.l)+'</td><td>'+bchip(s.r)+'</td><td>'+(s.w1||'\u2014')+'</td><td>'+(s.w2||'\u2014')+'</td><td>'+(s.sp||'\u2014')+'</td><td style="font-size:12px;color:var(--red);">'+(s.weak||'\u2014')+'</td><td><button class="btn btnd bsm" onclick="delScore('+s.id+')">\uD83D\uDDD1</button></td></tr>'+(s.action?'<tr><td colspan="10" style="font-size:12px;color:var(--tm);padding:4px 12px 10px;">\uD83D\uDCCC '+s.action+'</td></tr>':'')).join('')+'</tbody></table></div>';
+}
+function renderChart(){
+  const scs=[...gsc()].reverse(),ctx=document.getElementById('scoreChart');if(!ctx)return;
+  if(scChart){scChart.destroy();scChart=null;}if(!scs.length)return;
+  scChart=new Chart(ctx,{type:'line',data:{labels:scs.map(s=>s.date||s.week),
+    datasets:[{label:'Listening (/40)',data:scs.map(s=>s.l),borderColor:'#f85149',backgroundColor:'rgba(248,81,73,.1)',tension:0.4,fill:true,pointRadius:5},{label:'Reading (/40)',data:scs.map(s=>s.r),borderColor:'#58a6ff',backgroundColor:'rgba(88,166,255,.1)',tension:0.4,fill:true,pointRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8b949e',font:{family:'Hind Siliguri,Inter,sans-serif',size:12}}},tooltip:{backgroundColor:'#1c2333',titleColor:'#e6edf3',bodyColor:'#8b949e',borderColor:'#30363d',borderWidth:1}},scales:{x:{ticks:{color:'#656d76',font:{size:11},maxRotation:45},grid:{color:'#21293d'}},y:{min:0,max:40,ticks:{color:'#656d76',stepSize:5},grid:{color:'#21293d'}}}}});
+}
+const SECCL={Listening:'tag-listening',Reading:'tag-reading',Writing:'tag-writing',Speaking:'tag-speaking',Grammar:'tag-grammar',Vocabulary:'tag-vocab'};
+function addErr(){
+  const dt=document.getElementById('er-dt').value,sec=document.getElementById('er-sec').value,txt=document.getElementById('er-txt').value.trim();
+  if(!txt){toast('\u09AD\u09C1\u09B2\u09C7\u09B0 \u09AC\u09BF\u09AC\u09B0\u09A3 \u09B2\u09BF\u0996\u09C1\u09A8');return;}
+  const ers=ger();ers.unshift({id:Date.now(),date:dt,sec,text:txt});ser(ers);
+  document.getElementById('er-txt').value='';renderErrors();toast('\uD83D\uDCDD Error log \u09AF\u09CB\u0997 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7!');
+}
+function delErr(id){
+  if(!confirm('\u09AE\u09C1\u099B\u09AC\u09C7\u09A8?'))return;ser(ger().filter(e=>e.id!==id));renderErrors();toast('\uD83D\uDDD1 \u09AE\u09C1\u099B\u09C7 \u09AB\u09C7\u09B2\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7');
+}
+function renderErrors(){
+  const fil=document.getElementById('er-fil').value;let ers=ger();
+  if(fil)ers=ers.filter(e=>e.sec===fil);
+  const cont=document.getElementById('err-list');
+  if(!ers.length){cont.innerHTML='<div class="empty"><div class="ei">\uD83D\uDCDD</div>\u0995\u09CB\u09A8\u09CB error log \u09A8\u09C7\u0987\u0964 \u09AD\u09C1\u09B2 \u09A5\u09C7\u0995\u09C7 \u09B6\u09BF\u0996\u09C1\u09A8!</div>';return;}
+  cont.innerHTML=ers.map(e=>'<div class="eitm"><div class="eihdr">'+(e.date?'<span class="edt">\uD83D\uDCC5 '+e.date+'</span>':'')+'<span class="ttag '+(SECCL[e.sec]||'tag-typing')+' etg">'+(e.sec||'\u09B8\u09BE\u09A7\u09BE\u09B0\u09A3')+'</span></div><div class="etxt">'+e.text.replace(/\n/g,'<br>')+'</div><button class="edel" onclick="delErr('+e.id+')">\u2715</button></div>').join('');
+}
+function renderRes(){
+  document.getElementById('res-panel').innerHTML=RES.map(r=>'<div class="ritm"><div class="rnm">\uD83D\uDCD6 '+r.n+'</div><div class="rph">\uD83D\uDDD3 '+r.p+'</div><div class="rhw">'+r.h+'</div></div>').join('');
+}
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  if(name==='plan')renderPlan();
+  if(name==='progress'){updateStats();renderChart();}
+  if(name==='scores'){renderScHist();renderChart();}
+  if(name==='errors')renderErrors();
+  if(name==='calendar')renderCal();
+}
+function init(){
+  renderRes();renderToday();updateStats();initCal();initSW();markDay();
+  const t=tod();const ts=tds();
+  const inPlan = ts>='2026-09-01' && ts<='2027-01-25';
+  cY = inPlan ? t.getFullYear() : 2026;
+  cM = inPlan ? t.getMonth() : 8;
+  renderCal();updateTodayCnt();
+}
+window.showPage = showPage;
+window.showPhase = showPhase;
+window.calNav = calNav;
+window.calClick = calClick;
+window.addScore = addScore;
+window.delScore = delScore;
+window.addErr = addErr;
+window.delErr = delErr;
+window.renderErrors = renderErrors;
+window.togW = togW;
+window.toggleTask = toggleTask;
+
+document.addEventListener('DOMContentLoaded', () => { setSyncStatus('saving'); });
+</script>
+</body>
+</html>
