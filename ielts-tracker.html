@@ -127,6 +127,14 @@ body{font-family:'Hind Siliguri','Inter',sans-serif;background:var(--bg);color:v
 #toast.show{opacity:1;transform:translateY(0);}
 @media(max-width:900px){.side{display:none;}.wrap{flex-direction:column;}}
 @media(max-width:640px){.hdr{padding:10px 12px;height:auto;flex-wrap:wrap;gap:10px;}.logo{flex:1;}.hnav{width:100%;order:3;padding-bottom:4px;}.main{padding:12px;}.sgrid{grid-template-columns:repeat(2,1fr);}.nbtn{padding:5px 8px;font-size:12px;}.cday{font-size:11px;min-height:36px;}.sfrm{grid-template-columns:1fr 1fr;}}
+.cday.maintd{background:rgba(139,148,158,.08);border-color:rgba(139,148,158,.2);}
+.cday.fpushd{background:rgba(248,81,73,.07);border-color:rgba(248,81,73,.2);}
+.cday.consolid{background:rgba(188,140,255,.08);border-color:rgba(188,140,255,.2);}
+#countdown-widget{display:none;background:linear-gradient(135deg,rgba(248,81,73,.18),rgba(188,140,255,.12));border:1px solid rgba(248,81,73,.4);border-radius:12px;padding:14px 18px;margin-bottom:16px;}
+#countdown-widget .cw-title{font-size:14px;font-weight:700;color:var(--red);margin-bottom:8px;}
+#countdown-widget .cw-bar-wrap{height:10px;background:var(--bg2);border-radius:5px;overflow:hidden;margin-bottom:8px;border:1px solid var(--bdr);}
+#countdown-widget .cw-bar{height:100%;background:linear-gradient(90deg,var(--red),#ff7b72);border-radius:5px;transition:width .6s ease;}
+#countdown-widget .cw-info{font-size:12px;color:var(--t2);display:flex;justify-content:space-between;}
 </style>
 </head>
 <body>
@@ -153,6 +161,12 @@ body{font-family:'Hind Siliguri','Inter',sans-serif;background:var(--bg);color:v
         <div id="t-phase"></div>
         <div id="t-week" style="font-size:13px;color:var(--t2);margin-bottom:12px;"></div>
       </div>
+      <div id="countdown-widget">
+        <div class="cw-title">&#x26A1; Final Push — Aggressive Mode (Jan 8–28)</div>
+        <div class="cw-bar-wrap"><div class="cw-bar" style="width:0%"></div></div>
+        <div class="cw-info"><span>Loading...</span><span></span></div>
+        <div class="cw-mock" style="font-size:12px;margin-top:6px;color:var(--t1);"></div>
+      </div>
       <div class="card"><div class="ctit">&#x2705; আজকের Task-সমূহ</div><div class="tlist" id="today-tasks"></div></div>
       <div class="sgrid">
         <div class="scard"><div class="sval" id="s-pct" style="color:var(--blue)">0%</div><div class="slbl">সামগ্রিক সম্পন্ন</div></div>
@@ -164,10 +178,12 @@ body{font-family:'Hind Siliguri','Inter',sans-serif;background:var(--bg);color:v
     <div class="page" id="page-plan">
       <div class="shdr"><div class="stitle">&#x1F4C5; সম্পূর্ণ প্রস্তুতি পরিকল্পনা</div></div>
       <div class="ptabs">
-        <button class="ptab p1 active" onclick="showPhase(1)" id="ptab-1">&#x1F331; Phase 1 — Foundation</button>
-        <button class="ptab p2" onclick="showPhase(2)" id="ptab-2">&#x26A1; Phase 2 — Skill Building</button>
-        <button class="ptab p3" onclick="showPhase(3)" id="ptab-3">&#x1F9EA; Phase 3 — Mock Tests</button>
-        <button class="ptab p4" onclick="showPhase(4)" id="ptab-4">&#x2728; Phase 4 — Final Polish</button>
+        <button class="ptab p1 active" onclick="showPhase(1)" id="ptab-1">&#x1F331; Phase 1: Foundation</button>
+        <button class="ptab p2" onclick="showPhase(2)" id="ptab-2">&#x26A1; Phase 2: Skill</button>
+        <button class="ptab p3" onclick="showPhase(3)" id="ptab-3">&#x1F525; Phase 3: Peak</button>
+        <button class="ptab p4" onclick="showPhase(4)" id="ptab-4">&#x1F4DA; Phase 4: Maintenance</button>
+        <button class="ptab p1" onclick="showPhase(5)" id="ptab-5">&#x26A1; Phase 5: Final Push</button>
+        <button class="ptab p2" onclick="showPhase(6)" id="ptab-6">&#x2728; Phase 6: Consolidation</button>
       </div>
       <div id="plan-cont"></div>
     </div>
@@ -185,6 +201,9 @@ body{font-family:'Hind Siliguri','Inter',sans-serif;background:var(--bg);color:v
           <div class="clit"><div class="ldot" style="background:rgba(88,166,255,.2);border-color:var(--blue);"></div>আজ</div>
           <div class="clit"><div class="ldot" style="background:var(--mr);border-color:rgba(248,81,73,.4);"></div>Mock Test</div>
           <div class="clit"><div class="ldot" style="background:rgba(248,81,73,.3);border-color:var(--red);"></div>পরীক্ষা</div>
+          <div class="clit"><div class="ldot" style="background:rgba(139,148,158,.1);border-color:rgba(139,148,158,.3);"></div>Maintenance</div>
+          <div class="clit"><div class="ldot" style="background:rgba(248,81,73,.07);border-color:rgba(248,81,73,.2);"></div>Final Push</div>
+          <div class="clit"><div class="ldot" style="background:rgba(188,140,255,.08);border-color:rgba(188,140,255,.2);"></div>Consolidation</div>
           <div class="clit"><div class="ldot" style="background:var(--p1b);border-color:rgba(63,185,80,.3);"></div>Phase 1</div>
           <div class="clit"><div class="ldot" style="background:var(--p2b);border-color:rgba(88,166,255,.3);"></div>Phase 2</div>
           <div class="clit"><div class="ldot" style="background:var(--p3b);border-color:rgba(210,153,34,.3);"></div>Phase 3</div>
@@ -277,179 +296,173 @@ body{font-family:'Hind Siliguri','Inter',sans-serif;background:var(--bg);color:v
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-const EXAM=new Date('2027-01-25');
+const EXAM=new Date('2027-02-05'); // EXAM_DATE_PLACEHOLDER: 2027-02-05 (আনুমানিক)
+// Mock schedule: Phase 3 (Nov Peak) + Phase 5 (Jan Final Push)
 const MOCKS=[
-  {date:'2026-12-03',label:'Cambridge 18 \u2014 Test 1',note:'\u09aa\u09cd\u09b0\u09a5\u09ae full mock\u0964 Timer set \u0995\u09b0\u09c1\u09a8, pause \u0995\u09b0\u09ac\u09c7\u09a8 \u09a8\u09be\u0964'},
-  {date:'2026-12-06',label:'Cambridge 18 \u2014 Test 2',note:'Test 1-\u098f\u09b0 error analysis \u09b6\u09c7\u09b7 \u0995\u09b0\u09c7 \u09a6\u09bf\u09a8\u0964'},
-  {date:'2026-12-10',label:'Cambridge 18 \u2014 Test 3',note:''},
-  {date:'2026-12-13',label:'Cambridge 18 \u2014 Test 4',note:''},
-  {date:'2026-12-16',label:'Cambridge 19 \u2014 Test 1',note:''},
-  {date:'2026-12-19',label:'Cambridge 19 \u2014 Test 2',note:''},
-  {date:'2026-12-21',label:'Cambridge 19 \u2014 Test 3',note:''},
-  {date:'2026-12-24',label:'Cambridge 19 \u2014 Test 4',note:''},
-  {date:'2026-12-27',label:'Cambridge 20 \u2014 Test 1',note:''},
-  {date:'2026-12-30',label:'Cambridge 20 \u2014 Test 2',note:''},
-  {date:'2027-01-01',label:'Cambridge 20 \u2014 Test 3',note:''},
-  {date:'2027-01-03',label:'Cambridge 20 \u2014 Test 4',note:''},
-  {date:'2027-01-07',label:'Cambridge 21 \u2014 Test 1',note:'\u09b8\u0995\u09be\u09b2\u09c7 \u09aa\u09b0\u09c0\u0995\u09cd\u09b7\u09be \u09a6\u09bf\u09a8\u0964'},
-  {date:'2027-01-10',label:'Cambridge 21 \u2014 Test 2',note:''},
-  {date:'2027-01-14',label:'Cambridge 21 \u2014 Test 3',note:''},
-  {date:'2027-01-16',label:'Cambridge 21 \u2014 Test 4',note:'\u098f\u09b0\u09aa\u09b0\u09c7 \u09a8\u09a4\u09c1\u09a8 test \u09a6\u09c7\u09ac\u09c7\u09a8 \u09a8\u09be\u0964'}
+  // Phase 3: Peak Intensity (Nov 10-30) — Cam 18 + Cam 19 (first 2)
+  {date:'2026-11-12',label:'Cambridge 18 \u2014 Test 1',note:'\u09aa\u09cd\u09b0\u09a5\u09ae full mock\u0964 Timer set, pause \u09a8\u09be, phone \u09ac\u09a8\u09cd\u09a7\u0964 Single-task day\u0964'},
+  {date:'2026-11-16',label:'Cambridge 18 \u2014 Test 2',note:'Test 1-\u098f\u09b0 error analysis \u09b6\u09c7\u09b7 \u0995\u09b0\u09c7 \u09a6\u09bf\u09a8\u0964'},
+  {date:'2026-11-19',label:'Cambridge 18 \u2014 Test 3',note:''},
+  {date:'2026-11-23',label:'Cambridge 18 \u2014 Test 4',note:''},
+  {date:'2026-11-26',label:'Cambridge 19 \u2014 Test 1',note:''},
+  {date:'2026-11-30',label:'Cambridge 19 \u2014 Test 2',note:'Phase 3-\u098f\u09b0 \u09b6\u09c7\u09b7 mock\u0964 December-\u098f maintenance mode \u09b6\u09c1\u09b0\u09c1\u0964'},
+  // Phase 5: Final Push (Jan 8-28) — Cam 19 (last 2) + Cam 20 + Cam 21 (first 3)
+  {date:'2027-01-09',label:'Cambridge 19 \u2014 Test 3',note:'\u09ab\u09be\u0987\u09a8\u09be\u09b2 \u09aa\u09c1\u09b6 \u09b6\u09c1\u09b0\u09c1\u0964 IELTSly \u098f\u0996\u09a8 \u09a5\u09c7\u0995\u09c7 \u099a\u09be\u09b2\u09c1\u0964'},
+  {date:'2027-01-12',label:'Cambridge 19 \u2014 Test 4',note:''},
+  {date:'2027-01-14',label:'Cambridge 20 \u2014 Test 1',note:''},
+  {date:'2027-01-16',label:'Cambridge 20 \u2014 Test 2',note:''},
+  {date:'2027-01-19',label:'Cambridge 20 \u2014 Test 3',note:''},
+  {date:'2027-01-21',label:'Cambridge 20 \u2014 Test 4',note:''},
+  {date:'2027-01-23',label:'Cambridge 21 \u2014 Test 1',note:''},
+  {date:'2027-01-25',label:'Cambridge 21 \u2014 Test 2',note:''},
+  {date:'2027-01-28',label:'Cambridge 21 \u2014 Test 3',note:'9th mock\u0964 \u0986\u09b0 \u09a6\u09b0\u0995\u09be\u09b0 \u09b9\u09b2\u09c7 Cam 21 T4 Phase 6-\u098f\u0964'},
+  // Phase 6: Consolidation (Jan 29 - Feb 4) — Cam 21 Test 4 if needed
+  {date:'2027-01-30',label:'Cambridge 21 \u2014 Test 4 (if needed)',note:'Phase 6 Consolidation \u2014 \u09b6\u09c1\u09a7\u09c1 \u09a6\u09b0\u0995\u09be\u09b0 \u09b9\u09b2\u09c7\u0964'}
 ];
 const PLAN=[
+  // ===== PHASE 1: FOUNDATION (W1-6, Sep 1 - Oct 12) =====
   {ph:1,pn:'Foundation Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7-\u09e8',wn:'1-2',dr:'Sep 1-Sep 14',sd:'2026-09-01',ed:'2026-09-14',
-  goal:'\u09b6\u09c2\u09a8\u09cd\u09af \u09a5\u09c7\u0995\u09c7 \u09b6\u09c1\u09b0\u09c1\u0964 Grammar+Vocabulary \u09ad\u09bf\u09a4\u09cd\u09a4\u09bf, ear-training, CD-IELTS \u09aa\u09b0\u09bf\u099a\u09bf\u09a4\u09bf\u0964',
-  ms:['\u09ac\u09cd\u09b0\u09bf\u099f\u09bf\u09b6 \u0995\u09be\u0989\u09a8\u09cd\u09b8\u09bf\u09b2/IDP demo','\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 2 \u09b6\u09c7\u09b7\u09c7 Jumpinto diagnostic test'],
+  goal:'\u09b6\u09c2\u09a8\u09cd\u09af \u09a5\u09c7\u0995\u09c7 \u09b6\u09c1\u09b0\u09c1\u0964 Grammar+Vocab Log \u09ad\u09bf\u09a4\u09cd\u09a4\u09bf, Active Listening, CD-IELTS \u09aa\u09b0\u09bf\u099a\u09bf\u09a4\u09bf\u0964',
+  ms:['\u09ac\u09cd\u09b0\u09bf\u099f\u09bf\u09b6 \u0995\u09be\u0989\u09a8\u09cd\u09b8\u09bf\u09b2/IDP demo','Jumpinto diagnostic test (W2 \u09b6\u09c7\u09b7\u09c7)','Vocab Log \u09b6\u09c1\u09b0\u09c1'],
   tasks:[
-    {id:'w1L',text:'Listening \u2014 Ear Training: BBC/Podcast (\u09b8\u09be\u09ac\u099f\u09be\u0987\u099f\u09c7\u09b2 \u09a6\u09bf\u09df\u09c7 \u09a4\u09be\u09b0\u09aa\u09b0 \u099b\u09be\u09dc\u09be)',time:30,tag:'listening',res:'BBC Learning English / YouTube'},
-    {id:'w1G',text:'Grammar \u2014 Cambridge Grammar for IELTS (1\u099f\u09bf Unit + exercise)',time:30,tag:'grammar',res:'Cambridge Grammar for IELTS'},
-    {id:'w1V',text:'Vocabulary \u2014 Cambridge Vocabulary (1 Unit) + derivatives \u09b6\u09bf\u0996\u09c1\u09a8',time:20,tag:'vocab',res:'Cambridge Vocabulary for IELTS'},
-    {id:'w1S',text:'Speaking \u2014 SmallTalk2Me-\u09a4\u09c7 casual free talk (fluency focus)',time:20,tag:'speaking',res:'SmallTalk2Me (free tier)'},
-    {id:'w1T',text:'Typing \u2014 10fingers.com-\u098f touch typing \u09b6\u09bf\u0996\u09c1\u09a8',time:15,tag:'typing',res:'10fingers.com'},
-    {id:'w1R',text:'Reading \u2014 \u0987\u0982\u09b0\u09c7\u099c\u09bf article \u09aa\u09dc\u09c1\u09a8, \u09ae\u09c2\u09b2 \u0985\u09b0\u09cd\u09a5 \u09a7\u09b0\u09c1\u09a8',time:15,tag:'reading',res:'BBC News / The Guardian'}
+    {id:'w1L',text:'Active Listening \u2014 BBC/Podcast (\u09b8\u09be\u09ac\u099f\u09be\u0987\u099f\u09c7\u09b2 \u09a6\u09bf\u09df\u09c7 \u09a4\u09be\u09b0\u09aa\u09b0 \u099b\u09be\u09dc\u09be\u0964 Keyword note + \u09b6\u09c7\u09b7\u09c7 30sec summary \u09ac\u09b2\u09c1\u09a8)',time:30,tag:'listening',res:'BBC Learning English / YouTube'},
+    {id:'w1G',text:'Grammar \u2014 Cambridge Grammar for IELTS (1 Unit + exercise)',time:30,tag:'grammar',res:'Cambridge Grammar for IELTS'},
+    {id:'w1SM',text:'Speaking (\u09b8\u0995\u09be\u09b2) \u2014 SmallTalk2Me casual free talk (fluency focus, grammar \u09a8\u09df)',time:20,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w1R',text:'Reading + Vocab Log \u2014 English article \u09aa\u09dc\u09c1\u09a8\u0964 \u0985\u099c\u09be\u09a8\u09be \u09b6\u09ac\u09cd\u09a6 context \u09a5\u09c7\u0995\u09c7 \u0985\u09a8\u09c1\u09ae\u09be\u09a8 \u0995\u09b0\u09c1\u09a8 \u09a4\u09be\u09b0\u09aa\u09b0 Log-\u098f \u09b2\u09bf\u0996\u09c1\u09a8',time:20,tag:'reading',res:'BBC News / The Guardian'},
+    {id:'w1SE',text:'Speaking (\u09b0\u09be\u09a4) \u2014 \u09b8\u0995\u09be\u09b2\u09c7\u09b0 topic \u0986\u09ac\u09be\u09b0 \u09ac\u09b2\u09c1\u09a8 \u2014 \u0986\u0997\u09c7\u09b0 \u09ad\u09c1\u09b2 \u09a0\u09bf\u0995 \u0995\u09b0\u09c7',time:15,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w1Rev',text:'Grammar Review \u2014 \u0986\u099c\u0995\u09c7\u09b0 Unit summary + CD-IELTS interface demo',time:15,tag:'revision',res:'British Council/IDP Official Demo'}
   ]},
   {ph:1,pn:'Foundation Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e9-\u09ea',wn:'3-4',dr:'Sep 15-Sep 28',sd:'2026-09-15',ed:'2026-09-28',
-  goal:'Foundation Deepening\u0964 Liz Listening \u09b6\u09c1\u09b0\u09c1, Common Mistakes Intermediate\u0964',
-  ms:['Liz Listening Strategies \u09b6\u09c1\u09b0\u09c1','Common Mistakes (Intermediate) \u09b6\u09c1\u09b0\u09c1'],
+  goal:'Foundation Deepening\u0964 Liz Listening \u09b6\u09c1\u09b0\u09c1, Common Mistakes (Int), Vocab Log \u09ac\u09be\u09dc\u09be\u09a8\u09cb\u0964',
+  ms:['Liz Listening Strategies \u09b6\u09c1\u09b0\u09c1','Common Mistakes (Int) \u09b6\u09c1\u09b0\u09c1'],
   tasks:[
-    {id:'w3L',text:'Listening \u2014 Liz Listening Strategies (1-2 chapter/\u09a6\u09bf\u09a8) + BBC',time:35,tag:'listening',res:'Liz Listening Strategies + BBC'},
-    {id:'w3G',text:'Grammar \u2014 Cambridge Grammar (Tense, Articles, Prepositions)',time:25,tag:'grammar',res:'Cambridge Grammar for IELTS'},
-    {id:'w3V',text:'Vocabulary + Common Mistakes (Intermediate) \u09b6\u09c1\u09b0\u09c1 (3-4 section/\u09b8\u09aa\u09cd\u09a4\u09be\u09b9)',time:20,tag:'vocab',res:'Cambridge Vocabulary + Common Mistakes (Int)'},
-    {id:'w3S',text:'Speaking \u2014 SmallTalk2Me, 2 \u09ae\u09bf\u09a8 \u098f\u0995\u099f\u09be\u09a8\u09be \u09ac\u09b2\u09be\u09b0 practice',time:20,tag:'speaking',res:'SmallTalk2Me'},
-    {id:'w3T',text:'Typing \u2014 10fingers.com',time:15,tag:'typing',res:'10fingers.com'},
-    {id:'w3R',text:'Reading \u2014 Cambridge Official Guide, question types \u09aa\u09dc\u09c1\u09a8',time:15,tag:'reading',res:'Cambridge Official Guide'}
+    {id:'w3L',text:'Active Listening \u2014 Liz Listening Strategies (1-2 chapter) + BBC\u0964 Keyword note + 30sec summary',time:35,tag:'listening',res:'Liz Listening Strategies + BBC'},
+    {id:'w3G',text:'Grammar \u2014 Cambridge Grammar (Tense, Articles, Prepositions extra focus)',time:25,tag:'grammar',res:'Cambridge Grammar for IELTS'},
+    {id:'w3V',text:'Vocab Log + Common Mistakes (Int) \u09b6\u09c1\u09b0\u09c1 (3-4 section/\u09b8\u09aa\u09cd\u09a4\u09be\u09b9)\u0964 Cambridge Vocab \u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 2-3 \u09ac\u09be\u09b0 supplement',time:20,tag:'vocab',res:'Personal Vocab Log + Common Mistakes (Int)'},
+    {id:'w3SM',text:'Speaking (\u09b8\u0995\u09be\u09b2) \u2014 SmallTalk2Me, 2 \u09ae\u09bf\u09a8 \u098f\u0995\u099f\u09be\u09a8\u09be \u09ac\u09b2\u09be\u09b0 practice\u0964 Record \u0995\u09b0\u09c1\u09a8\u0964',time:20,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w3SE',text:'Speaking (\u09b0\u09be\u09a4) \u2014 Recording \u09b6\u09c1\u09a8\u09c1\u09a8, \u09ad\u09c1\u09b2 \u099a\u09bf\u09b9\u09cd\u09a8\u09bf\u09a4 \u0995\u09b0\u09c1\u09a8, \u0986\u09ac\u09be\u09b0 \u09ac\u09b2\u09c1\u09a8\u0964',time:15,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w3R',text:'Reading \u2014 Cambridge Official Guide, question types + Vocab Log \u0986\u09aa\u09a1\u09c7\u099f',time:15,tag:'reading',res:'Cambridge Official Guide'}
   ]},
   {ph:1,pn:'Foundation Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09eb-\u09ec',wn:'5-6',dr:'Sep 29-Oct 12',sd:'2026-09-29',ed:'2026-10-12',
-  goal:'Skill \u09b8\u09c7\u09a4\u09c1\u09ac\u09a8\u09cd\u09a7\u09a8\u0964 Section-wise practice \u09b6\u09c1\u09b0\u09c1, Writing-\u098f\u09b0 \u09aa\u09cd\u09b0\u09a5\u09ae \u0995\u09a6\u09ae\u0964',
-  ms:['Typing 30+ WPM','Section-wise Listening','\u09aa\u09cd\u09b0\u09a5\u09ae Writing paragraph'],
+  goal:'Skill \u09b8\u09c7\u09a4\u09c1\u09ac\u09a8\u09cd\u09a7\u09a8\u0964 Section-wise practice \u09b6\u09c1\u09b0\u09c1, Writing English-first approach\u0964',
+  ms:['Section-wise Listening \u09b6\u09c1\u09b0\u09c1','Writing English keyword approach','Vocab Log 100+ \u09b6\u09ac\u09cd\u09a6'],
   tasks:[
-    {id:'w5L',text:'Listening \u2014 Cambridge 15-16 section-wise (1-2/\u09a6\u09bf\u09a8), audio script \u09a6\u09bf\u09df\u09c7 \u09ad\u09c1\u09b2 analysis',time:40,tag:'listening',res:'Cambridge IELTS 15-16'},
+    {id:'w5L',text:'Active Listening \u2014 Cambridge 15-16 section-wise (1-2/\u09a6\u09bf\u09a8), audio script \u09a6\u09bf\u09df\u09c7 \u09ad\u09c1\u09b2 analysis\u0964 Keyword + summary',time:40,tag:'listening',res:'Cambridge IELTS 15-16'},
     {id:'w5G',text:'Grammar + Common Mistakes (Int) \u099a\u09be\u09b2\u09bf\u09df\u09c7 \u09af\u09be\u09a8',time:25,tag:'grammar',res:'Cambridge Grammar + Common Mistakes (Int)'},
-    {id:'w5V',text:'Vocabulary + \u0986\u0997\u09c7\u09b0 \u09b6\u09ac\u09cd\u09a6 revision',time:20,tag:'vocab',res:'Cambridge Vocabulary for IELTS'},
-    {id:'w5S',text:'Speaking \u2014 SmallTalk2Me, IELTS Part 1 questions practice',time:20,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w5V',text:'Vocab Log \u2014 Listening/Reading passage \u09a5\u09c7\u0995\u09c7 context-\u09b8\u09b9 \u09b6\u09ac\u09cd\u09a6\u0964 Cambridge Vocab supplement',time:20,tag:'vocab',res:'Personal Vocab Log'},
+    {id:'w5SM',text:'Speaking (\u09b8\u0995\u09be\u09b2) \u2014 SmallTalk2Me, IELTS Part 1 questions practice',time:20,tag:'speaking',res:'SmallTalk2Me'},
     {id:'w5R',text:'Reading \u2014 Cambridge 15-16, 1 passage (untimed)',time:15,tag:'reading',res:'Cambridge IELTS 15-16'},
-    {id:'w5W',text:'Writing \u2014 \u099b\u09cb\u099f paragraph, Grammarly \u09a6\u09bf\u09df\u09c7 check',time:15,tag:'writing',res:'Grammarly / grammar checker'},
-    {id:'w5T',text:'Typing \u2014 10fingers.com (Target: 30+ WPM)',time:10,tag:'typing',res:'10fingers.com'}
+    {id:'w5W',text:'Writing \u2014 Paragraph \u09b2\u09bf\u0996\u09c1\u09a8\u0964 English keyword \u09a6\u09bf\u09df\u09c7 outline \u09aa\u09cd\u09b0\u09a5\u09ae\u09c7, \u09a4\u09be\u09b0\u09aa\u09b0 \u09b2\u09bf\u0996\u09c1\u09a8\u0964 \u09ac\u09be\u0982\u09b2\u09be \u09a5\u09c7\u0995\u09c7 translate \u09a8\u09df\u0964',time:15,tag:'writing',res:'Grammarly / grammar checker'},
+    {id:'w5SE',text:'Speaking (\u09b0\u09be\u09a4) \u2014 Writing topic-\u098f PRE framework \u09a6\u09bf\u09df\u09c7 \u09ae\u09c1\u0996\u09c7 \u09ac\u09b2\u09c1\u09a8',time:10,tag:'speaking',res:'SmallTalk2Me'}
   ]},
+  // ===== PHASE 2: SKILL BUILDING (W7-10, Oct 13 - Nov 9) =====
   {ph:2,pn:'Skill Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09ed-\u09ef',wn:'7-9',dr:'Oct 13-Nov 2',sd:'2026-10-13',ed:'2026-11-02',
-  goal:'Strategy Learning\u0964 Prediction skills, Rachel Mitchell Writing, Jumpinto.com \u09b6\u09c1\u09b0\u09c1\u0964',
-  ms:['Rachel Mitchell Writing \u09b6\u09c1\u09b0\u09c1','Cambridge Write & Improve \u09b6\u09c1\u09b0\u09c1','Jumpinto.com \u09b6\u09c1\u09b0\u09c1','Common Mistakes (Advanced) \u09b6\u09c1\u09b0\u09c1'],
+  goal:'Strategy Learning\u0964 Prediction skills, Rachel Mitchell Writing, Paragraph Mapping, PRE Framework\u0964',
+  ms:['Rachel Mitchell \u09b6\u09c1\u09b0\u09c1','Write & Improve \u09b6\u09c1\u09b0\u09c1','Jumpinto.com \u09b6\u09c1\u09b0\u09c1','Common Mistakes (Adv) \u09b6\u09c1\u09b0\u09c1'],
   tasks:[
-    {id:'w7L',text:'Listening \u2014 Liz advanced + Cambridge 16 section-wise, prediction skills, trap \u099a\u09c7\u09a8\u09be',time:45,tag:'listening',res:'Liz Listening + Cambridge IELTS 16'},
-    {id:'w7W',text:'Writing \u2014 Rachel Mitchell (W7-8: Task 1, W9: Task 2) + Write & Improve',time:45,tag:'writing',res:'Rachel Mitchell + Cambridge Write & Improve'},
-    {id:'w7R',text:'Reading \u2014 Cambridge 16-17 timed (1 passage 20 min), skimming/scanning',time:30,tag:'reading',res:'Cambridge IELTS 16-17'},
-    {id:'w7S',text:'Speaking \u2014 SmallTalk2Me Part 1+2, cue card 2 min, filler words \u0995\u09ae\u09be\u09a8\u09cb',time:20,tag:'speaking',res:'SmallTalk2Me'},
-    {id:'w7V',text:'Vocabulary revision + Common Mistakes (Advanced) \u09b6\u09c1\u09b0\u09c1',time:20,tag:'vocab',res:'Cambridge Vocabulary + Common Mistakes (Adv)'},
-    {id:'w7T',text:'Typing \u2014 Target: 40+ WPM',time:10,tag:'typing',res:'10fingers.com'},
-    {id:'w7J',text:'Jumpinto.com \u2014 \u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 2-3 \u09ac\u09be\u09b0 section-wise practice',time:0,tag:'extra',res:'Jumpinto.com'}
+    {id:'w7L',text:'Active Listening \u2014 Liz advanced + Cambridge 16 section-wise\u0964 Prediction: audio-\u09b0 \u0986\u0997\u09c7 questions analyze, answers predict\u0964 Synonym/self-correction/trap \u099a\u09c7\u09a8\u09be\u0964 Keyword note \u09ac\u09be\u09a7\u09cd\u09af\u09a4\u09be\u09ae\u09c2\u09b2\u0995',time:45,tag:'listening',res:'Liz Listening + Cambridge IELTS 16'},
+    {id:'w7W',text:'Writing \u2014 Rachel Mitchell Task 1+2\u0964 English bullet \u09a6\u09bf\u09df\u09c7 outline \u09aa\u09cd\u09b0\u09a5\u09ae, \u09a4\u09be\u09b0\u09aa\u09b0 \u09b2\u09bf\u0996\u09c1\u09a8\u0964 Write & Improve submit',time:45,tag:'writing',res:'Rachel Mitchell + Cambridge Write & Improve'},
+    {id:'w7R',text:'Reading \u2014 Cambridge 16-17 timed (1 passage 20 min)\u0964 Paragraph Mapping: \u09aa\u09cd\u09b0\u09a4\u09bf paragraph-\u098f\u09b0 \u09aa\u09cd\u09b0\u09a5\u09ae+\u09b6\u09c7\u09b7 \u09ac\u09be\u0995\u09cd\u09af \u09aa\u09dc\u09c1\u09a8 \u2192 \u09ae\u09c2\u09b2 \u0989\u09a6\u09cd\u09a6\u09c7\u09b6\u09cd\u09af \u09ac\u09c1\u099d\u09c1\u09a8 \u2192 targeted scan',time:30,tag:'reading',res:'Cambridge IELTS 16-17'},
+    {id:'w7SM',text:'Speaking (\u09b8\u0995\u09be\u09b2) \u2014 SmallTalk2Me Part 1+2\u0964 Cue card: 1 min prep + 2 min speaking\u0964 PRE: Point\u2192Reason\u2192Example',time:20,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w7V',text:'Vocab Log + Common Mistakes (Adv) \u09b6\u09c1\u09b0\u09c1\u0964 Passage \u09a5\u09c7\u0995\u09c7 context-\u09b8\u09b9 \u09b6\u09ac\u09cd\u09a6',time:20,tag:'vocab',res:'Personal Vocab Log + Common Mistakes (Adv)'},
+    {id:'w7SE',text:'Speaking (\u09b0\u09be\u09a4) \u2014 \u09b8\u0995\u09be\u09b2\u09c7\u09b0 cue card \u09b6\u09c1\u09a8\u09c1\u09a8\u0964 Filler words \u099a\u09bf\u09b9\u09cd\u09a8\u09bf\u09a4 \u0995\u09b0\u09c1\u09a8\u0964 \u0986\u09ac\u09be\u09b0 \u09ac\u09b2\u09c1\u09a8\u0964',time:20,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w7J',text:'Jumpinto.com \u2014 \u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 2-3 \u09ac\u09be\u09b0 section-wise practice (CD interface)',time:0,tag:'extra',res:'Jumpinto.com'}
   ]},
-  {ph:2,pn:'Skill Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09e6-\u09e7\u09e7',wn:'10-11',dr:'Nov 3-Nov 16',sd:'2026-11-03',ed:'2026-11-16',
-  goal:'Intensive Practice\u0964 Cambridge 17, Part 2+3 Speaking, Writing 40 min-\u098f \u09b6\u09c7\u09b7 \u0995\u09b0\u09be\u0964',
-  ms:['Cambridge 17 section-wise \u09b6\u09c1\u09b0\u09c1','Common Mistakes (Adv) \u09b6\u09c7\u09b7','Writing 40 min \u0985\u09ad\u09cd\u09af\u09be\u09b8'],
+  {ph:2,pn:'Skill Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09e6',wn:'10',dr:'Nov 3-Nov 9',sd:'2026-11-03',ed:'2026-11-09',
+  goal:'Intensive Practice + Transition\u0964 Cambridge 17, Full Writing timed, Paragraph Mapping + PRE refined\u0964',
+  ms:['Cambridge 17 section-wise','Common Mistakes (Adv) \u09b6\u09c7\u09b7','Writing 40 min \u09a6\u0995\u09cd\u09b7\u09a4\u09be','Makkar Speaking \u0995\u09bf\u09a8\u09c1\u09a8 (Nov \u09b6\u09c1\u09b0\u09c1\u09a4\u09c7)'],
   tasks:[
-    {id:'w10L',text:'Listening \u2014 Cambridge 17 timed, Map/MCQ/Matching \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 type drill + Jumpinto',time:45,tag:'listening',res:'Cambridge IELTS 17 + Jumpinto.com'},
-    {id:'w10W',text:'Writing \u2014 Rachel Mitchell: Task 1 20min, Task 2 40min + Write & Improve',time:45,tag:'writing',res:'Rachel Mitchell + Write & Improve'},
-    {id:'w10R',text:'Reading \u2014 Cambridge 17 timed (3 passage 60 min), TF/NG + Matching Headings',time:30,tag:'reading',res:'Cambridge IELTS 17'},
-    {id:'w10S',text:'Speaking \u2014 SmallTalk2Me Part 2+3, longer answer (Point\u2192Reason\u2192Example)',time:20,tag:'speaking',res:'SmallTalk2Me'},
-    {id:'w10V',text:'Vocabulary + Error Log review + Common Mistakes (Adv) \u09b6\u09c7\u09b7',time:20,tag:'vocab',res:'Cambridge Vocabulary + Error Log'},
-    {id:'w10T',text:'Typing \u2014 40+ WPM maintain',time:10,tag:'typing',res:'10fingers.com'}
+    {id:'w10L',text:'Active Listening \u2014 Cambridge 17 timed section-wise\u0964 Map/MCQ/Matching \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 type drill\u0964 Keyword + summary',time:45,tag:'listening',res:'Cambridge IELTS 17 + Jumpinto.com'},
+    {id:'w10W',text:'Writing \u2014 Rachel Mitchell: Task 1 (20 min) + Task 2 (40 min)\u0964 Write & Improve submit',time:45,tag:'writing',res:'Rachel Mitchell + Write & Improve'},
+    {id:'w10R',text:'Reading \u2014 3 passage 60 min-\u098f\u0964 Paragraph Mapping + TF/NG + Matching Headings',time:30,tag:'reading',res:'Cambridge IELTS 17'},
+    {id:'w10SM',text:'Speaking (\u09b8\u0995\u09be\u09b2) \u2014 SmallTalk2Me Part 2+3\u0964 Longer structured answer (PRE framework)\u0964',time:20,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w10V',text:'Vocab Log + Error Log Review + Common Mistakes (Adv) \u09b6\u09c7\u09b7',time:20,tag:'vocab',res:'Personal Vocab Log + Error Log'},
+    {id:'w10SE',text:'Speaking (\u09b0\u09be\u09a4) \u2014 Makkar Speaking \u0995\u09bf\u09a8\u09c1\u09a8\u0964 \u09a8\u09bf\u099c\u09c7 3-4\u099f\u09bf universal story draft \u0995\u09b0\u09c1\u09a8\u0964',time:20,tag:'speaking',res:'Makkar Speaking'}
   ]},
-  {ph:2,pn:'Skill Building',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09e8-\u09e7\u09e9',wn:'12-13',dr:'Nov 17-Nov 30',sd:'2026-11-17',ed:'2026-11-30',
-  goal:'Transition\u0964 Semi-mock, full Writing test, Reading timed, Speaking band descriptors\u0964',
-  ms:['Rachel Mitchell \u09b6\u09c7\u09b7','Semi-mock (L+R \u098f\u0995\u09b8\u09be\u09a5\u09c7)','Speaking band descriptors \u09aa\u09dc\u09c1\u09a8'],
+  // ===== PHASE 3: PEAK INTENSITY (W11-13, Nov 10 - Nov 30) =====
+  {ph:3,pn:'Peak Intensity \u2014 Mock Start',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09e7-\u09e7\u09e9',wn:'11-13',dr:'Nov 10-Nov 30',sd:'2026-11-10',ed:'2026-11-30',isMock:true,
+  goal:'Full mock \u09b6\u09c1\u09b0\u09c1! Cambridge 18 (T1-4) + Cambridge 19 (T1-2) = 6\u099f\u09bf mock\u0964 Human partner \u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 2 \u09a6\u09bf\u09a8\u0964',
+  ms:['C18: T1(Nov12),T2(Nov16),T3(Nov19),T4(Nov23)','C19: T1(Nov26),T2(Nov30)','Human speaking partner \u09b6\u09c1\u09b0\u09c1'],
   tasks:[
-    {id:'w12L',text:'Listening \u2014 Cambridge 17 + Semi-mock (L+R \u098f\u0995\u09b8\u09be\u09a5\u09c7 timed)',time:40,tag:'listening',res:'Cambridge IELTS 17'},
-    {id:'w12W',text:'Writing \u2014 Rachel Mitchell \u09b6\u09c7\u09b7, \u09aa\u09cd\u09b0\u09a4\u09bf 2 \u09a6\u09bf\u09a8\u09c7 full test (60 min)',time:40,tag:'writing',res:'Rachel Mitchell + Write & Improve'},
-    {id:'w12R',text:'Reading \u2014 Full test (60 min: P1 18min, P2 20min, P3 22-25min)',time:35,tag:'reading',res:'Cambridge IELTS 17'},
-    {id:'w12S',text:'Speaking \u2014 Part 1+2+3 combined mock (SmallTalk2Me)',time:25,tag:'speaking',res:'SmallTalk2Me'},
-    {id:'w12V',text:'Revision \u2014 Error log, vocabulary, common mistakes',time:10,tag:'revision',res:'\u09a8\u09bf\u099c\u09c7\u09b0 error log'}
+    {id:'w11M',text:'MOCK TEST (Single-Task Day) \u2014 Cambridge 18/19 (L:30+R:60+W:60 min, pause \u099b\u09be\u09dc\u09be)',time:180,tag:'mock',res:'Cambridge IELTS 18-19'},
+    {id:'w11E',text:'Error Analysis (variable \u09b8\u09ae\u09df \u2014 test-\u098f\u09b0 \u09b8\u09ae\u09be\u09a8 \u09ac\u09be \u09ac\u09c7\u09b6\u09bf) \u2014 Bangla Solution \u09a6\u09bf\u09df\u09c7 root cause \u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3',time:90,tag:'mock',res:'Bangla Solution (18-21)'},
+    {id:'w11L',text:'Active Listening \u2014 Weak area drill (Map/MCQ/Matching \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 type)\u0964 Keyword + summary',time:40,tag:'listening',res:'Cambridge 18-19 audio'},
+    {id:'w11SM',text:'Speaking (\u09b8\u0995\u09be\u09b2) \u2014 Makkar Speaking: idea bank approach\u0964 5-7 cue card PRE framework \u09a6\u09bf\u09df\u09c7 adapt',time:30,tag:'speaking',res:'Makkar Speaking + SmallTalk2Me'},
+    {id:'w11P',text:'Speaking \u2014 Human Partner (\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 2 \u09a6\u09bf\u09a8) \u2014 Batchmate-\u098f\u09b0 \u09b8\u09be\u09a5\u09c7 record + \u09ad\u09c1\u09b2 \u09a7\u09b0\u09be\u09a8',time:30,tag:'speaking',res:'University Batchmate'},
+    {id:'w11W',text:'Writing \u2014 \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 task focus\u0964 Write & Improve feedback',time:30,tag:'writing',res:'Cambridge Write & Improve'},
+    {id:'w11R',text:'Reading \u2014 Paragraph Mapping + Speed drill',time:25,tag:'reading',res:'Cambridge 18-19'},
+    {id:'w11V',text:'Vocab Log \u2014 Mock \u09a5\u09c7\u0995\u09c7 \u09a8\u09a4\u09c1\u09a8 \u09b6\u09ac\u09cd\u09a6 + Error Log',time:20,tag:'vocab',res:'Personal Vocab Log'},
+    {id:'w11SE',text:'Speaking (\u09b0\u09be\u09a4) \u2014 \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 cue card \u0986\u09ac\u09be\u09b0',time:15,tag:'speaking',res:'SmallTalk2Me'}
   ]},
-  {ph:3,pn:'Mock Tests & Analysis',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09ea-\u09e7\u09eb',wn:'14-15',dr:'Dec 1-Dec 14',sd:'2026-12-01',ed:'2026-12-14',isMock:true,
-  goal:'Cambridge 18 \u09a6\u09bf\u09df\u09c7 \u09aa\u09cd\u09b0\u09a5\u09ae 4\u099f\u09bf full mock\u0964 Makkar Speaking \u0995\u09bf\u09a8\u09c1\u09a8\u0964 Error analysis \u09b6\u09c1\u09b0\u09c1\u0964',
-  ms:['Makkar Speaking \u0995\u09bf\u09a8\u09c1\u09a8','C18: T1(Dec3), T2(Dec6), T3(Dec10), T4(Dec13)'],
+  // ===== PHASE 4: MAINTENANCE (W14-19, Dec 1 - Jan 7) =====
+  {ph:4,pn:'Maintenance Mode',wl:'December \u2014 Maintenance Mode',wn:'14-19',dr:'Dec 1-Jan 7',sd:'2026-12-01',ed:'2027-01-07',
+  goal:'Thesis + Semester Exam \u09aa\u09bf\u09b0\u09bf\u09df\u09a1\u09c7 momentum \u09ac\u099c\u09be\u09df\u0964 Full mock \u09a8\u09df, 1-1.5 \u0998\u09a3\u09cd\u099f\u09be/\u09a6\u09bf\u09a8\u0964',
+  ms:['Semester Final Exam: Dec 20-25','Thesis Defence: Jan 1-7','Jan 8 \u09a5\u09c7\u0995\u09c7 Final Push \u09b6\u09c1\u09b0\u09c1'],
   tasks:[
-    {id:'w14M',text:'MOCK TEST \u2014 Cambridge 18 (L:30+R:60+W:60 min, pause \u099b\u09be\u09dc\u09be)',time:180,tag:'mock',res:'Cambridge IELTS 18'},
-    {id:'w14E',text:'Error Analysis \u2014 Bangla Solution \u09a6\u09bf\u09df\u09c7 \u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u09ad\u09c1\u09b2 \u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3',time:60,tag:'mock',res:'Bangla Solution (18-21)'},
-    {id:'w14L',text:'Listening \u2014 Weak Area Repair (\u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 question type practice)',time:40,tag:'listening',res:'Cambridge 18 + Jumpinto.com'},
-    {id:'w14S',text:'Speaking \u2014 Makkar Speaking 5-7 cue card/\u09a6\u09bf\u09a8 + SmallTalk2Me',time:30,tag:'speaking',res:'Makkar Speaking + SmallTalk2Me'},
-    {id:'w14W',text:'Writing \u2014 \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 task focus + Cambridge Write & Improve',time:30,tag:'writing',res:'Cambridge Write & Improve'},
-    {id:'w14R',text:'Reading \u2014 Speed drill, scanning + keyword matching',time:20,tag:'reading',res:'Cambridge 18'},
-    {id:'w14T',text:'Typing \u2014 Maintain 45+ WPM',time:10,tag:'typing',res:'10fingers.com'}
+    {id:'w14La',text:'Active Listening \u2014 BBC/Podcast (20-30 min)\u0964 Keyword note + summary\u0964 \u09a7\u09be\u09b0\u09be\u09ac\u09be\u09b9\u09bf\u0995\u09a4\u09be \u09ac\u099c\u09be\u09df \u09b0\u09be\u0996\u09be\u0987 \u09b2\u0995\u09cd\u09b7\u09cd\u09af',time:25,tag:'listening',res:'BBC / Podcast'},
+    {id:'w14SM',text:'Speaking (\u09b8\u0995\u09be\u09b2) \u2014 SmallTalk2Me casual AI practice (15-20 min)',time:15,tag:'speaking',res:'SmallTalk2Me'},
+    {id:'w14V',text:'Vocab Log \u2014 Listening \u09a5\u09c7\u0995\u09c7 5-7 \u09b6\u09ac\u09cd\u09a6 \u09af\u09cb\u0997 \u0995\u09b0\u09c1\u09a8',time:10,tag:'vocab',res:'Personal Vocab Log'},
+    {id:'w14P',text:'Speaking \u2014 Human Partner (\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 1 \u09a6\u09bf\u09a8 \u09ae\u09be\u09a4\u09cd\u09b0) \u2014 \u09a7\u09be\u09b0\u09be\u09ac\u09be\u09b9\u09bf\u0995\u09a4\u09be \u09ac\u099c\u09be\u09df',time:20,tag:'speaking',res:'University Batchmate'},
+    {id:'w14Sec',text:'Single-section practice (\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 1\u099f\u09bf \u09ae\u09be\u09a4\u09cd\u09b0) \u2014 Listening \u09ac\u09be Reading-\u098f\u09b0 \u09b6\u09c1\u09a7\u09c1 1\u099f\u09bf section (full mock \u09a8\u09df)',time:20,tag:'extra',res:'Cambridge IELTS (section-wise)'}
   ]},
-  {ph:3,pn:'Mock Tests & Analysis',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09ec-\u09e7\u09ed',wn:'16-17',dr:'Dec 15-Dec 28',sd:'2026-12-15',ed:'2026-12-28',isMock:true,
-  goal:'Cambridge 19+20 \u09a6\u09bf\u09df\u09c7 mock \u099a\u09be\u09b2\u09bf\u09df\u09c7 \u09af\u09be\u09a8\u0964 Score 7.0-\u098f\u09b0 \u09a6\u09bf\u0995\u09c7 \u09a8\u09bf\u09a8\u0964',
-  ms:['C19: T1(Dec16),T2(Dec19),T3(Dec21),T4(Dec24)','C20: T1(Dec27)'],
+  // ===== PHASE 5: FINAL PUSH (W20-22, Jan 8 - Jan 28) =====
+  {ph:5,pn:'Final Push \u2014 Aggressive',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e8\u09e6-\u09e8\u09e8',wn:'20-22',dr:'Jan 8-Jan 28',sd:'2027-01-08',ed:'2027-01-28',isMock:true,
+  goal:'Aggressive mock \u09b6\u09bf\u09a1\u09bf\u0989\u09b2 \u2014 \u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 \u09b8\u09b0\u09cd\u09ac\u09cb\u099a\u09cd\u099a 3\u099f\u09bf mock\u0964 IELTSly \u099a\u09be\u09b2\u09c1\u0964 Human partner 2\u09a6\u09bf\u09a8/\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u0964',
+  ms:['IELTSly \u099c\u09be\u09a8 8 \u09a5\u09c7\u0995\u09c7 subscribe','C19(T3-4): Jan9,12 | C20(T1-4): Jan14,16,19,21 | C21(T1-3): Jan23,25,28'],
   tasks:[
-    {id:'w16M',text:'MOCK TEST \u2014 Cambridge 19/20 (L:30+R:60+W:60, pause \u099b\u09be\u09dc\u09be)',time:180,tag:'mock',res:'Cambridge IELTS 19-20'},
-    {id:'w16E',text:'Error Analysis \u2014 Bangla Solution \u09a6\u09bf\u09df\u09c7 \u09ac\u09bf\u09b6\u09cd\u09b2\u09c7\u09b7\u09a3',time:60,tag:'mock',res:'Bangla Solution'},
-    {id:'w16L',text:'Listening \u2014 \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 type drill (Map/MCQ/Matching)',time:40,tag:'listening',res:'Cambridge 19-20 + Jumpinto.com'},
-    {id:'w16S',text:'Speaking \u2014 Makkar Speaking Part 2+3 (5-7 cue card/\u09a6\u09bf\u09a8)',time:30,tag:'speaking',res:'Makkar Speaking + SmallTalk2Me'},
-    {id:'w16W',text:'Writing \u2014 Weak area focus, Write & Improve feedback',time:30,tag:'writing',res:'Cambridge Write & Improve'},
-    {id:'w16R',text:'Reading \u2014 Speed drill',time:20,tag:'reading',res:'Cambridge 19-20'},
-    {id:'w16T',text:'Typing \u2014 Maintain 45+ WPM',time:10,tag:'typing',res:'10fingers.com'}
+    {id:'w20M',text:'MOCK TEST (Single-Task Day) \u2014 Cambridge 19/20/21 (L:30+R:60+W:60 min, pause \u099b\u09be\u09dc\u09be)',time:180,tag:'mock',res:'Cambridge IELTS 19-21'},
+    {id:'w20E',text:'Error Analysis (variable \u2014 test-\u098f\u09b0 \u09b8\u09ae\u09be\u09a8 \u09ac\u09be \u09ac\u09c7\u09b6\u09bf) + IELTSly-\u09a4\u09c7 Writing submit',time:90,tag:'mock',res:'Bangla Solution + IELTSly.ai'},
+    {id:'w20L',text:'Active Listening \u2014 \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 type drill\u0964 Keyword note + summary',time:40,tag:'listening',res:'Cambridge 20-21 audio'},
+    {id:'w20SM',text:'Speaking (\u09b8\u0995\u09be\u09b2) \u2014 Makkar idea bank, 5-7 cue card\u0964 PRE framework',time:30,tag:'speaking',res:'Makkar Speaking'},
+    {id:'w20P',text:'Speaking \u2014 Human Partner (\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 2 \u09a6\u09bf\u09a8) \u2014 Record + \u09ad\u09c1\u09b2 \u09a7\u09b0\u09be\u09a8',time:30,tag:'speaking',res:'University Batchmate'},
+    {id:'w20W',text:'Writing \u2014 IELTSly + Write & Improve feedback',time:30,tag:'writing',res:'IELTSly.ai + Write & Improve'},
+    {id:'w20R',text:'Reading \u2014 Paragraph Mapping + Speed drill',time:25,tag:'reading',res:'Cambridge 20-21'},
+    {id:'w20V',text:'Vocab Log Revision + Error Log Pattern',time:20,tag:'vocab',res:'Personal Vocab Log + Error Log'},
+    {id:'w20SE',text:'Speaking (\u09b0\u09be\u09a4) \u2014 \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 cue card \u0986\u09ac\u09be\u09b0',time:15,tag:'speaking',res:'SmallTalk2Me'}
   ]},
-  {ph:3,pn:'Mock Tests & Analysis',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09ee',wn:'18',dr:'Dec 29-Jan 4',sd:'2026-12-29',ed:'2027-01-04',isMock:true,
-  goal:'Cambridge 20 \u09b6\u09c7\u09b7 (T2:Dec30,T3:Jan1,T4:Jan3)\u0964 Weak area intensive repair\u0964',
-  ms:['C20: T2(Dec30),T3(Jan1),T4(Jan3)'],
+  // ===== PHASE 6: CONSOLIDATION (W23, Jan 29 - Feb 4) =====
+  {ph:6,pn:'Consolidation',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e8\u09e9 \u2014 Consolidation',wn:'23',dr:'Jan 29-Feb 4',sd:'2027-01-29',ed:'2027-02-04',
+  goal:'\u09a8\u09a4\u09c1\u09a8 \u0995\u09bf\u099b\u09c1 \u09b6\u09c7\u0996\u09be \u09a8\u09df\u0964 Error log-\u098f \u09a6\u09c1\u09b0\u09cd\u09ac\u09b2 \u099c\u09be\u09df\u0997\u09be\u09df targeted drilling\u0964 Speaking confidence\u0964',
   tasks:[
-    {id:'w18M',text:'MOCK TEST \u2014 Cambridge 20 \u09b6\u09c7\u09b7 tests',time:180,tag:'mock',res:'Cambridge IELTS 20'},
-    {id:'w18E',text:'Error Analysis + \u0986\u0997\u09c7\u09b0 \u09b8\u09ac \u09ad\u09c1\u09b2\u09c7\u09b0 pattern review',time:60,tag:'mock',res:'Bangla Solution + Error Log'},
-    {id:'w18L',text:'Listening \u2014 \u09b8\u09ac\u099a\u09c7\u09df\u09c7 \u09ac\u09c7\u09b6\u09bf \u09ad\u09c1\u09b2 type-\u098f intensive drill',time:40,tag:'listening',res:'Cambridge 20 audio'},
-    {id:'w18S',text:'Speaking \u2014 Makkar cue card (5-7/\u09a6\u09bf\u09a8)',time:30,tag:'speaking',res:'Makkar Speaking'},
-    {id:'w18W',text:'Writing \u2014 Best essays revise, linking words \u09ae\u09a8\u09c7 \u09b0\u09be\u0996\u09c1\u09a8',time:30,tag:'writing',res:'\u09a8\u09bf\u099c\u09c7\u09b0 essays + Write & Improve'},
-    {id:'w18V',text:'Total Revision \u2014 Error log, vocabulary, common mistakes',time:20,tag:'revision',res:'\u09a8\u09bf\u099c\u09c7\u09b0 notes'}
-  ]},
-  {ph:4,pn:'Final Polish',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e7\u09ef-\u09e8\u09e6',wn:'19-20',dr:'Jan 5-Jan 18',sd:'2027-01-05',ed:'2027-01-18',isMock:true,
-  goal:'Cambridge 21 \u09a6\u09bf\u09df\u09c7 final mocks\u0964 Confidence maximize\u0964 \u0995\u09cb\u09a8\u09cb \u09a8\u09a4\u09c1\u09a8 \u0995\u09bf\u099b\u09c1 \u09b6\u09c7\u0996\u09be\u09b0 \u099a\u09c7\u09b7\u09cd\u099f\u09be \u09a8\u09df\u0964',
-  ms:['C21: T1(Jan7),T2(Jan10),T3(Jan14),T4(Jan16 \u09b6\u09c7\u09b7 mock)'],
-  tasks:[
-    {id:'w19M',text:'FINAL MOCK \u2014 Cambridge 21 (\u09b8\u0995\u09be\u09b2\u09c7, real exam condition)',time:180,tag:'mock',res:'Cambridge IELTS 21'},
-    {id:'w19E',text:'Error Analysis + pattern review',time:60,tag:'mock',res:'Bangla Solution (21)'},
-    {id:'w19S',text:'Speaking \u2014 Makkar cue card (\u0995\u09a0\u09bf\u09a8 ones \u09ac\u09be\u09b0\u09ac\u09be\u09b0), SmallTalk2Me full mock',time:30,tag:'speaking',res:'Makkar Speaking + SmallTalk2Me'},
-    {id:'w19L',text:'Listening \u2014 \u0986\u0997\u09c7\u09b0 \u09ad\u09c1\u09b2\u09c7\u09b0 audio re-listen',time:30,tag:'listening',res:'Cambridge 21 audio'},
-    {id:'w19W',text:'Writing \u2014 Best essays revise, Task 1+2 opening paragraph',time:20,tag:'writing',res:'\u09a8\u09bf\u099c\u09c7\u09b0 essays'},
-    {id:'w19R',text:'Reading \u2014 Speed drill, \u0986\u0997\u09c7\u09b0 \u09ad\u09c1\u09b2\u09c7\u09b0 revision',time:20,tag:'reading',res:'\u09a8\u09bf\u099c\u09c7\u09b0 notes'},
-    {id:'w19V',text:'Total Revision \u2014 Error log, vocabulary, common mistakes',time:20,tag:'revision',res:'\u09b8\u09ac notes'}
-  ]},
-  {ph:4,pn:'Final Polish',wl:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9 \u09e8\u09e7 \u2014 \u09aa\u09b0\u09c0\u0995\u09cd\u09b7\u09be\u09b0 \u09b8\u09aa\u09cd\u09a4\u09be\u09b9',wn:'21',dr:'Jan 19-Jan 24',sd:'2027-01-19',ed:'2027-01-24',
-  goal:'\u0995\u09cb\u09a8\u09cb \u09a8\u09a4\u09c1\u09a8 test \u09ac\u09be \u0995\u09bf\u099b\u09c1 \u09b6\u09c7\u0996\u09be\u09b0 \u099a\u09c7\u09b7\u09cd\u099f\u09be \u09a8\u09be! \u09b6\u09c1\u09a7\u09c1 revision \u0993 rest\u0964',
-  tasks:[
-    {id:'w21Mo',text:'\u09b8\u09cb\u09ae (Jan 19): Error log final revision + Makkar common 10\u099f\u09bf cue card',time:90,tag:'revision',res:'Error log + Makkar Speaking'},
-    {id:'w21Tu',text:'\u09ae\u0999\u09cd\u0997\u09b2 (Jan 20): Writing template revision + 1 Task 1 + 1 Task 2',time:60,tag:'writing',res:'\u09a8\u09bf\u099c\u09c7\u09b0 Writing notes'},
-    {id:'w21We',text:'\u09ac\u09c1\u09a7 (Jan 21): Listening \u09ad\u09c1\u09b2\u09c7\u09b0 audio re-listen + Reading favourite passages',time:60,tag:'revision',res:'Cambridge audio + Reading notes'},
-    {id:'w21Th',text:'\u09ac\u09c3\u09b9\u09b8 (Jan 22): Light revision + Speaking 15 min + Exam center route confirm',time:30,tag:'revision',res:'Makkar Speaking (15 min)'},
-    {id:'w21Fr',text:'\u09b6\u09c1\u0995\u09cd\u09b0 (Jan 23): \u0995\u09bf\u099b\u09c1\u0987 \u09aa\u09dc\u09ac\u09c7\u09a8 \u09a8\u09be! \u09ac\u09bf\u09b6\u09cd\u09b0\u09be\u09ae \u09a8\u09bf\u09a8, \u09ad\u09be\u09b2\u09cb \u0996\u09be\u09a8, \u09a4\u09be\u09dc\u09be\u09a4\u09be\u09dc\u09bf \u0998\u09c1\u09ae\u09be\u09a8\u0964 Passport/ID ready\u0964',time:0,tag:'revision',res:'---'},
-    {id:'w21Ex',text:'EXAM DAY! \u09b6\u09be\u09a8\u09cd\u09a4 \u09a5\u09be\u0995\u09c1\u09a8\u0964 5 \u09ae\u09be\u09b8 \u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4\u09bf \u09a8\u09bf\u09df\u09c7\u099b\u09c7\u09a8 \u2014 \u0986\u09a4\u09cd\u09ae\u09ac\u09bf\u09b6\u09cd\u09ac\u09be\u09b8 \u09b0\u09be\u0996\u09c1\u09a8!',time:0,tag:'mock',res:'---'}
+    {id:'w23D',text:'Targeted Drilling \u2014 Error log-\u098f \u09b8\u09ac\u099a\u09c7\u09df\u09c7 \u09ac\u09c7\u09b6\u09bf \u09ad\u09c1\u09b2 question types-\u098f laser-focused practice',time:60,tag:'revision',res:'Error Log + Cambridge audio'},
+    {id:'w23C21',text:'Cambridge 21 \u2014 Test 4 (\u09b6\u09c1\u09a7\u09c1 Jan 28-\u098f \u09a8\u09be \u09b9\u09b2\u09c7)',time:0,tag:'mock',res:'Cambridge IELTS 21'},
+    {id:'w23I',text:'IELTSly \u2014 Writing/Speaking final round feedback',time:30,tag:'extra',res:'IELTSly.ai'},
+    {id:'w23SP',text:'Speaking \u2014 Human Partner: 2-3\u099f\u09bf \u09aa\u09c2\u09b0\u09cd\u09a3\u09be\u0999\u09cd\u0997 Speaking mock interview (record + review)',time:45,tag:'speaking',res:'University Batchmate'},
+    {id:'w23L',text:'Light Listening \u2014 Revision-only (\u0986\u0997\u09c7\u09b0 \u09ad\u09c1\u09b2\u09c7\u09b0 audio re-listen)',time:20,tag:'listening',res:'Cambridge audio'},
+    {id:'w23Rev',text:'Light Revision \u2014 Makkar common 10 cue card + Writing template + Linking words',time:30,tag:'revision',res:'Makkar Speaking + Writing notes'},
+    {id:'w23Exam',text:'Exam-\u098f\u09b0 1 \u09a6\u09bf\u09a8 \u0986\u0997\u09c7: \u09aa\u09c1\u09b0\u09cb \u09ac\u09bf\u09b6\u09cd\u09b0\u09be\u09ae\u0964 \u09ad\u09be\u09b2\u09cb \u0996\u09be\u09a8, \u09a4\u09be\u09dc\u09be\u09a4\u09be\u09dc\u09bf \u0998\u09c1\u09ae\u09be\u09a8\u0964 Passport/ID ready\u0964',time:0,tag:'revision',res:'---'}
   ]}
 ];
 const RES=[
   {n:'Cambridge Grammar for IELTS',p:'Phase 1 (W1-6)',h:'\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 1 Unit, Grammar foundation'},
-  {n:'Cambridge Vocabulary for IELTS',p:'Phase 1-2 (W1-13)',h:'\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 1 Unit, Phase 2-\u09a4\u09c7 revision'},
+  {n:'Personal Vocabulary Log',p:'Phase 1 \u09a5\u09c7\u0995\u09c7 \u09b8\u09be\u09b0\u09be\u09b8\u09ae\u09df',h:'\u09aa\u09cd\u09b0\u09be\u0987\u09ae\u09be\u09b0\u09bf vocab method \u2014 Reading/Listening \u09a5\u09c7\u0995\u09c7 context-\u09b8\u09b9 \u09b6\u09ac\u09cd\u09a6'},
+  {n:'Cambridge Vocabulary for IELTS',p:'Phase 1-3 (W1-13) supplement',h:'Secondary resource \u2014 \u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 2-3 \u09ac\u09be\u09b0 revision. Phase 4-\u098f \u09b8\u09ae\u09cd\u09aa\u09c2\u09b0\u09cd\u09a3 \u09ac\u09a8\u09cd\u09a7'},
   {n:'Common Mistakes (Intermediate)',p:'Phase 1 (W3-6)',h:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 3-4 section'},
   {n:'Common Mistakes (Advanced)',p:'Phase 2 (W7-10)',h:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 3-4 section'},
   {n:'Cambridge Official Guide',p:'Phase 1-2 (W2-8)',h:'Format \u09ac\u09cb\u099d\u09be, strategy \u09b6\u09c7\u0996\u09be'},
   {n:'Liz Listening Strategies',p:'Phase 1-2 (W1-10)',h:'Listening strategy \u0993 technique'},
-  {n:'Rachel Mitchell Writing',p:'Phase 2 (W7-13)',h:'Task 1+2 structure \u0993 template'},
+  {n:'Rachel Mitchell Writing',p:'Phase 2 (W7-10)',h:'Task 1+2 structure \u0993 template'},
   {n:'Cambridge IELTS 15-16',p:'Phase 1 (W4-6)',h:'Section-wise practice'},
-  {n:'Cambridge IELTS 17',p:'Phase 2 (W10-11)',h:'Section-wise timed practice'},
-  {n:'Cambridge IELTS 18',p:'Phase 3 (W14-15)',h:'Full Mock Test #1-4'},
-  {n:'Cambridge IELTS 19',p:'Phase 3 (W15-16)',h:'Full Mock Test #5-8'},
-  {n:'Cambridge IELTS 20',p:'Phase 3 (W17-18)',h:'Full Mock Test #9-12'},
-  {n:'Cambridge IELTS 21',p:'Phase 4 (W19-20)',h:'Final Mock Test #13-16'},
-  {n:'Bangla Solution (18-21)',p:'Phase 3-4',h:'Mock \u09aa\u09b0\u09c7 error analysis'},
-  {n:'Makkar Speaking',p:'Phase 3-4 (Dec \u0995\u09bf\u09a8\u09c1\u09a8)',h:'\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 5-7 cue card'},
-  {n:'SmallTalk2Me',p:'\u09b8\u09be\u09b0\u09be\u09b8\u09ae\u09df',h:'\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 15-20 min AI speaking'},
-  {n:'10fingers.com',p:'\u09b8\u09be\u09b0\u09be\u09b8\u09ae\u09df',h:'\u09aa\u09cd\u09b0\u09a4\u09bf\u09a6\u09bf\u09a8 15 min, target 40+ WPM'},
-  {n:'Cambridge Write & Improve',p:'Phase 2-4 (W7+)',h:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 3-4 \u09ac\u09be\u09b0 essay submit'},
-  {n:'Jumpinto.com',p:'Phase 2-3 (W7-18)',h:'Section-wise practice, CD interface'}
+  {n:'Cambridge IELTS 17',p:'Phase 2 (W8-10)',h:'Section-wise timed practice'},
+  {n:'Cambridge IELTS 18',p:'Phase 3 (W11-13)',h:'Full Mock Test #1-4 (Nov 12-23)'},
+  {n:'Cambridge IELTS 19',p:'Phase 3 (W12-13) + Phase 5 (Jan 8-14)',h:'Mock #5-6 (Nov) \u0993 #7-8 (Jan)'},
+  {n:'Cambridge IELTS 20',p:'Phase 5 (Jan 9-21)',h:'Full Mock Test #9-12'},
+  {n:'Cambridge IELTS 21',p:'Phase 5 (Jan 22-28) + Phase 6',h:'Final Mock Test #13-15 (+1 if needed)'},
+  {n:'Bangla Solution (18-21)',p:'Phase 3, 5, 6',h:'\u09aa\u09cd\u09b0\u09a4\u09bf mock-\u098f\u09b0 \u09aa\u09b0\u09c7 root cause analysis'},
+  {n:'Makkar Speaking',p:'Phase 3 \u09a5\u09c7\u0995\u09c7 (Nov \u09b6\u09c1\u09b0\u09c1\u09a4\u09c7 \u0995\u09bf\u09a8\u09c1\u09a8)',h:'Idea bank \u2014 universal story, PRE framework. \u0995\u0996\u09a8\u09cb cue card \u09ae\u09c1\u0996\u09b8\u09cd\u09a5 \u09a8\u09df'},
+  {n:'SmallTalk2Me',p:'Phase 1 \u09a5\u09c7\u0995\u09c7 \u09b8\u09be\u09b0\u09be\u09b8\u09ae\u09df',h:'\u09b8\u0995\u09be\u09b2\u09c7 20 min + \u09b0\u09be\u09a4\u09c7 15-20 min (split)'},
+  {n:'Cambridge Write & Improve',p:'Phase 2+ (W7+)',h:'\u09b8\u09aa\u09cd\u09a4\u09be\u09b9\u09c7 3-4 \u09ac\u09be\u09b0 essay submit'},
+  {n:'Jumpinto.com',p:'Phase 2-3 (W7-13)',h:'Section-wise practice, CD interface'},
+  {n:'IELTSly.ai',p:'Phase 5 \u09a5\u09c7\u0995\u09c7 (Jan 8+)',h:'AI Writing/Speaking feedback \u2014 Final Push \u098f \u09b8\u09ac\u099a\u09c7\u09df\u09c7 \u0995\u09be\u09b0\u09cd\u09af\u0995\u09b0'}
 ];
 
 function tod(){const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
 function ds(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function tds(){return ds(tod());}
 function inr(s,a,b){return s>=a&&s<=b;}
-function pcc(p){return ['','p1','p2','p3','p4'][p];}
-function pcol(p){return ['','var(--p1c)','var(--p2c)','var(--p3c)','var(--p4c)'][p];}
+// Phases: 1=Foundation, 2=Skill, 3=Peak, 4=Maintenance, 5=FinalPush, 6=Consolidation
+function pcc(p){return ['','p1','p2','p3','p4','p1','p2'][p]||'p1';}
+function pcol(p){return ['','var(--p1c)','var(--p2c)','var(--p3c)','var(--p4c)','var(--red)','var(--purple)'][p]||'var(--p1c)';}
 function gwk(s){return PLAN.find(w=>inr(s,w.sd,w.ed))||null;}
 function gmk(s){return MOCKS.find(m=>m.date===s)||null;}
 
@@ -613,11 +626,12 @@ function renderToday(){
 }
 function updateStats(){
   const chk=gc(),str=streak();
-  let tot=0,done=0;const ps={1:{t:0,d:0},2:{t:0,d:0},3:{t:0,d:0},4:{t:0,d:0}};
+  let tot=0,done=0;
+  const ps={1:{t:0,d:0},2:{t:0,d:0},3:{t:0,d:0},4:{t:0,d:0},5:{t:0,d:0},6:{t:0,d:0}};
   for(const w of PLAN){
     for(let d=new Date(w.sd);d<=new Date(w.ed);d.setDate(d.getDate()+1)){
       const dss=ds(d);
-      for(const tk of w.tasks){tot++;ps[w.ph].t++;if(chk[dss+'__'+tk.id]){done++;ps[w.ph].d++;}}
+      for(const tk of w.tasks){tot++;if(!ps[w.ph])ps[w.ph]={t:0,d:0};ps[w.ph].t++;if(chk[dss+'__'+tk.id]){done++;ps[w.ph].d++;}}
     }
   }
   const pct=tot?Math.round(done/tot*100):0;
@@ -626,8 +640,8 @@ function updateStats(){
   document.getElementById('streak-display').textContent='\uD83D\uDD25 '+str+' \u09A6\u09BF\u09A8';
   const bars=document.getElementById('phase-bars');
   if(bars){
-    const pn={1:'Phase 1 \u2014 Foundation',2:'Phase 2 \u2014 Skill Building',3:'Phase 3 \u2014 Mock Tests',4:'Phase 4 \u2014 Final Polish'};
-    const pcls={1:'fp1',2:'fp2',3:'fp3',4:'fp4'};
+    const pn={1:'Phase 1 \u2014 Foundation',2:'Phase 2 \u2014 Skill Building',3:'Phase 3 \u2014 Peak Intensity',4:'Phase 4 \u2014 Maintenance',5:'Phase 5 \u2014 Final Push',6:'Phase 6 \u2014 Consolidation'};
+    const pcls={1:'fp1',2:'fp2',3:'fp3',4:'fp4',5:'fp1',6:'fp2'};
     bars.innerHTML=Object.entries(ps).map(([p,st])=>{
       const pp=st.t?Math.round(st.d/st.t*100):0;
       return '<div class="pbwrp"><div class="pbhdr"><span>'+pn[p]+'</span><span>'+st.d+'/'+st.t+' ('+pp+'%)</span></div><div class="pbtrk"><div class="pbfil '+pcls[p]+'" style="width:'+pp+'%"></div></div></div>';
@@ -636,7 +650,7 @@ function updateStats(){
 }
 let curP=1;
 function showPhase(p){
-  curP=p;[1,2,3,4].forEach(i=>{const b=document.getElementById('ptab-'+i);if(b)b.classList.toggle('active',i===p);});
+  curP=p;[1,2,3,4,5,6].forEach(i=>{const b=document.getElementById('ptab-'+i);if(b)b.classList.toggle('active',i===p);});
   renderPlan();
 }
 function renderPlan(){
@@ -678,14 +692,26 @@ function renderCal(){
   for(let i=0;i<fd;i++)html+='<div class="cday empty"></div>';
   for(let day=1;day<=dim;day++){
     const dss=cY+'-'+String(cM+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
-    const isT=dss===ts,mk=gmk(dss),isE=dss==='2027-01-25'||dss==='2027-01-24';
-    const wk=gwk(dss),inR=dss>='2026-09-01'&&dss<='2027-01-25';
+    const isT=dss===ts,mk=gmk(dss);
+    const isE=dss==='2027-02-05'||dss==='2027-02-04'||dss==='2027-02-03';
+    const wk=gwk(dss),inR=dss>='2026-09-01'&&dss<='2027-02-05';
+    const isMaint=dss>='2026-12-01'&&dss<='2027-01-07';
+    const isFP=dss>='2027-01-08'&&dss<='2027-01-28';
+    const isConsol=dss>='2027-01-29'&&dss<='2027-02-04';
     let anyD=false;if(wk){for(const tk of wk.tasks){if(chk[dss+'__'+tk.id]){anyD=true;break;}}}
     let cls='cday',sty='';
-    if(!inR)cls+=' out';else if(isE)cls+=' examd';else if(mk)cls+=' mockd';
-    else if(wk){const pbm={1:'rgba(26,127,55,.08)',2:'rgba(31,111,235,.08)',3:'rgba(210,153,34,.08)',4:'rgba(188,140,255,.08)'};sty='background:'+pbm[wk.ph]+';';}
+    if(!inR)cls+=' out';
+    else if(isE)cls+=' examd';
+    else if(mk)cls+=' mockd';
+    else if(isMaint)cls+=' maintd';
+    else if(isFP)cls+=' fpushd';
+    else if(isConsol)cls+=' consolid';
+    else if(wk){const pbm={1:'rgba(26,127,55,.08)',2:'rgba(31,111,235,.08)',3:'rgba(210,153,34,.08)',4:'rgba(139,148,158,.06)',5:'rgba(248,81,73,.06)',6:'rgba(188,140,255,.07)'};sty='background:'+(pbm[wk.ph]||pbm[1])+';';}
     if(isT)cls+=' today';if(anyD)cls+=' hasd';
-    html+='<div class="'+cls+'" style="'+sty+'" onclick="calClick(\''+dss+'\')" title="'+(mk?mk.label:(wk?wk.wl:''))+'">'+(isE?'\uD83C\uDFAF':mk?'\uD83E\uDDEA':day)+(anyD||mk?'<div class="cdot"></div>':'')+'</div>';
+    html+='<div class="'+cls+'" style="'+sty+'" onclick="calClick(\''+dss+'\')" title="'+(mk?mk.label:(wk?wk.wl:''))+'">'+
+      (isE?'\uD83C\uDFAF':mk?'\uD83E\uDDEA':day)+(anyD||mk?'<div class="cdot"></div>':'')+
+      (isMaint&&!mk&&!isE?'<div style="font-size:8px;color:var(--t2);line-height:1;">✦</div>':'')+
+    '</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
 }
@@ -695,7 +721,7 @@ function calClick(dss){
   det.style.display='block';
   const dobj=new Date(dss+'T00:00:00');
   dt.textContent=dobj.toLocaleDateString('bn-BD',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  if(dss==='2027-01-25'||dss==='2027-01-24'){dtk.innerHTML='<div style="text-align:center;padding:24px;font-size:20px;">\uD83C\uDFAF \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE\u09B0 \u09A6\u09BF\u09A8! \u09B6\u09C1\u09AD\u0995\u09BE\u09AE\u09A8\u09BE!</div>';return;}
+  if(dss==='2027-02-05'||dss==='2027-02-04'||dss==='2027-02-03'){dtk.innerHTML='<div style="text-align:center;padding:24px;font-size:20px;">\uD83C\uDFAF \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE\u09B0 \u09A6\u09BF\u09A8 (\u0986\u09A8\u09C1\u09AE\u09BE\u09A8\u09BF\u0995)! \u09B6\u09C1\u09AD\u0995\u09BE\u09AE\u09A8\u09BE!</div>';return;}
   let x='';if(mk)x='<div class="mnot">\uD83D\uDD34 <strong>'+mk.label+'</strong>'+(mk.note?' \u2014 '+mk.note:'')+'</div>';
   if(wk){
     dtk.innerHTML=x+'<div class="wgl" style="margin-bottom:10px;">Phase '+wk.ph+' \u2014 '+wk.wl+'</div>';
@@ -771,12 +797,31 @@ function showPage(name){
   if(name==='errors')renderErrors();
   if(name==='calendar')renderCal();
 }
+function updateCountdown(){
+  const ts=tds();
+  const widget=document.getElementById('countdown-widget');
+  if(!widget)return;
+  const inFP=ts>='2027-01-08'&&ts<='2027-01-28';
+  widget.style.display=inFP?'block':'none';
+  if(!inFP)return;
+  const fpStart=new Date('2027-01-08'),fpEnd=new Date('2027-01-28');
+  const total=Math.round((fpEnd-fpStart)/86400000);
+  const done=Math.round((tod()-fpStart)/86400000);
+  const pct=Math.min(100,Math.round(done/total*100));
+  const daysLeft=Math.max(0,Math.round((fpEnd-tod())/86400000));
+  widget.querySelector('.cw-bar').style.width=pct+'%';
+  widget.querySelector('.cw-info').innerHTML=`<span>\u26a1 Final Push: \u09b6\u09c1\u09b0\u09c1 \u09a5\u09c7\u0995\u09c7 ${pct}% \u09b9\u09df\u09c7\u099b\u09c7</span><span style="color:var(--red);font-weight:700;">${daysLeft} \u09a6\u09bf\u09a8 \u09ac\u09be\u0995\u09bf</span>`;
+  // Check today's mock
+  const todayMock=MOCKS.find(m=>m.date===ts);
+  const mockNote=widget.querySelector('.cw-mock');
+  if(mockNote)mockNote.textContent=todayMock?'\uD83D\uDCCC \u0986\u099c Mock: '+todayMock.label:'\u2705 \u0986\u099c Mock Day \u09a8\u09df \u2014 Practice \u09a6\u09bf\u09a8';
+}
 function init(){
-  renderRes();renderToday();updateStats();initCal();initSW();markDay();
+  renderRes();renderToday();updateStats();initCal();initSW();markDay();updateCountdown();
   const t=tod();const ts=tds();
-  const inPlan = ts>='2026-09-01' && ts<='2027-01-25';
-  cY = inPlan ? t.getFullYear() : 2026;
-  cM = inPlan ? t.getMonth() : 8;
+  const inPlan=ts>='2026-09-01'&&ts<='2027-02-05';
+  cY=inPlan?t.getFullYear():2026;
+  cM=inPlan?t.getMonth():8;
   renderCal();updateTodayCnt();
 }
 window.showPage = showPage;
